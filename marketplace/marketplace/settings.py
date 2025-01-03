@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from .config import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT
+from .config import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT, EMAIL_USER, EMAIL_PASSWORD, EM_PORT, EM_HOST, REDIS_URL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,7 +136,7 @@ LOGOUT_REDIRECT_URL = '/users/login/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Брокер сообщений (Redis)
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = REDIS_URL
 
 # База данных для результатов
 CELERY_RESULT_BACKEND = 'django-db'
@@ -145,3 +145,10 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
+# Настройки почты
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = EM_HOST
+EMAIL_PORT = EM_PORT
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = EMAIL_USER
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
