@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_celery_results',
+    'django_celery_beat',
     'users',
 ]
 
@@ -126,7 +128,20 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'users.User'
 
+LOGOUT_REDIRECT_URL = '/users/login/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Брокер сообщений (Redis)
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# База данных для результатов
+CELERY_RESULT_BACKEND = 'django-db'
+
+# Другие настройки (по желанию)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
