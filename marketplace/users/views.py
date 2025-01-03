@@ -27,6 +27,11 @@ class CreateUserView(UserIsNotAuthenticated, CreateView):
         send_email_active_account.delay(user.id, domain)
         return redirect('email_confirmation_sent')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Регистрация'
+        return context
+
 
 class UserConfirmEmailView(View):
     def get(self, request, uidb64, token):
@@ -74,3 +79,8 @@ class EmailConfirmationFailedView(TemplateView):
 
 class LoginUserView(LoginView):
     template_name = 'users/login.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Вход'
+        return context

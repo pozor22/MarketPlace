@@ -1,12 +1,24 @@
 {% extends 'users/base.html' %}
-{% block main %}
-  {% load static %}
 
-  <h1>Вход</h1>
+{% block title %} {{ title }} {% endblock %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block main %}
+  <div class="login-container">
+    <h1>Вход</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Войти</button>
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn-submit">Войти</button>
     </form>
-    <a href="{% url 'registration' %}">Нет аккаунта? Зарегистрируйтесь</a>
+    <div class="auth-links">
+        <a href="{% url 'registration' %}">Нет аккаунта? Зарегистрируйтесь</a>
+    </div>
+  </div>
 {% endblock %}

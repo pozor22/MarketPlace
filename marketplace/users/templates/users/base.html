@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% block title %}{% endblock %}</title>
     {% load static %}
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    {% block style %} {% endblock %}
 </head>
 <body>
     <header>
-        {% if user.is_authenticated %}
-            <p>Вы вошли как {{ user.username }}</p>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Выйти</button>
+        <div class="logo">VovaShop</div>
+        <div class="search-container">
+            <form method="get" action="{% url 'login' %}" class="search-form">
+                <input type="text" name="q" placeholder="Поиск товаров..." class="search-input">
+                <button type="submit" class="search-button">Поиск</button>
             </form>
-        {% else %}
-            <p>Вы не авторизованы!</p>
-            <a href="{% url 'login' %}">Войти</a>
-            <a href="{% url 'registration' %}">Зарегистрироваться</a>
-        {% endif %}
+        </div>
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                <p>Вы вошли как {{ user.username }}</p>
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Выйти</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Войти</a>
+                <a href="{% url 'registration' %}">Зарегистрироваться</a>
+            {% endif %}
+        </div>
     </header>
   <div>
     {% block main %} {% endblock %}

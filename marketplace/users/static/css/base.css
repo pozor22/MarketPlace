@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Стили для хедера */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000; /* Черный фон */
+    color: #fff; /* Белый текст */
+    border-bottom: 5px solid #800080; /* Фиолетовая полоса снизу */
+}
+
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header .auth-buttons a,
+header .auth-buttons button {
+    text-decoration: none;
+    color: #fff;
+    background-color: #800080; /* Фиолетовый фон кнопок */
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+header .auth-buttons button {
+    font-family: inherit;
+}
+
+header .auth-buttons a:hover,
+header .auth-buttons button:hover {
+    background-color: #9b4f9b; /* Более светлый фиолетовый при наведении */
+}
+
+/* Стили для основного блока */
+div {
+    padding: 20px;
+}
+
+/* Стили для контейнера с поиском */
+.search-container {
+    display: inline-block;
+    margin-left: 20px; /* Отступ от кнопок для входа/регистрации */
+    vertical-align: middle;
+}
+
+/* Стили для формы поиска */
+.search-form {
+    display: flex;
+}
+
+/* Стили для поля ввода */
+.search-input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+/* Стили для кнопки поиска */
+.search-button {
+    padding: 8px 12px;
+    background-color: #800080; /* Фиолетовый фон */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.search-button:hover {
+    background-color: #9b4f9b; /* Более светлый фиолетовый при наведении */
+}
