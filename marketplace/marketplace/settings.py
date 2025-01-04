@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'users',
+    'products',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +129,9 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'users.User'
 
-LOGOUT_REDIRECT_URL = '/users/login/'
+LOGOUT_REDIRECT_URL = '/products/'
+
+LOGIN_REDIRECT_URL = '/products/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

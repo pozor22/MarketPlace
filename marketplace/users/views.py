@@ -1,4 +1,3 @@
-from django.urls import reverse_lazy
 from django.views.generic import CreateView, View, TemplateView
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator

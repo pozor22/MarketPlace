@@ -1,0 +1,41 @@
+{% extends 'products/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'products/home.css' %}">
+{% endblock %}
+
+{% block main %}
+  <div class="products-container">
+    <h1>Наши товары</h1>
+    <div class="products-list">
+      {% for product in products %}
+        <div class="product-card">
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <p class="product-price">Цена: {{ product.price }}₽</p>
+          <p class="product-author">Автор: {{ product.author.username }}</p>
+        </div>
+      {% empty %}
+        <p>Нет доступных товаров.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+      {% endif %}
+
+      <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+      {% endif %}
+    </div>
+{% endblock %}
+
