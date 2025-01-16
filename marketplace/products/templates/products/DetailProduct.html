@@ -1,0 +1,27 @@
+{% extends 'products/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'products/DetailProduct.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="product-detail-container">
+    <div class="product-detail-image">
+        <img
+            src="data:image/png;base64,{{ product.get_image_base64 }}"
+            alt="{{ product.name }}"
+            class="product-image"
+        >
+    </div>
+    <div class="product-detail-info">
+        <h1>{{ product.name }}</h1>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="product-price">Цена: {{ product.price }}₽</p>
+        <p class="product-author">Автор: {{ product.author.username }}</p>
+        <a href="{% url 'home' %}" class="back-link">Вернуться к товарам</a>
+    </div>
+</div>
+{% endblock %}

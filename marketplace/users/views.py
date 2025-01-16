@@ -83,3 +83,8 @@ class LoginUserView(LoginView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Вход'
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
