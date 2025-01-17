@@ -133,6 +133,8 @@ LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_REDIRECT_URL = '/'
 
+LOGIN_URL = '/users/login/'
+
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
 # Default primary key field type

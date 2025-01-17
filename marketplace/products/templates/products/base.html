@@ -20,16 +20,14 @@
         </div>
         <div class="auth-buttons">
             {% if user.is_authenticated %}
-                {% if user.avatar %}
-                    <img src="data:image/png;base64,{{ user.get_image_base64 }}" alt="Avatar" class="user-avatar">
-                {% else %}
-                    <p>Аватарка отсутствует.</p>
-                {% endif %}
+                <a href="{% url 'profile' %}" style="text-decoration: none; color: inherit;">
+                    {% if user.avatar %}
+                        <img src="data:image/png;base64,{{ user.get_image_base64 }}" alt="Avatar" class="user-avatar">
+                    {% else %}
+                        <img src="{% static 'users/images/default_avatar_user.png' %}" alt="Avatar" class="user-avatar">
+                    {% endif %}
+                </a>
                 <p>Вы вошли как {{ user.username }}</p>
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">Выйти</button>
-                </form>
             {% else %}
                 <a href="{% url 'login' %}">Войти</a>
                 <a href="{% url 'registration' %}">Зарегистрироваться</a>

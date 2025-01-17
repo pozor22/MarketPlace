@@ -1,0 +1,98 @@
+{% extends 'users/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'userscss/profile.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="profile-container">
+    <div class="profile-photo">
+        {% if user.avatar %}
+            <img src="data:image/png;base64,{{ user.get_image_base64 }}" alt="Аватар пользователя">
+        {% else %}
+            <img src="{% static 'users/images/default_avatar_user.png' %}" alt="Дефолтный аватар">
+        {% endif %}
+    </div>
+    <div class="profile-info">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert
+                        {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h1 id="username-display">{{ user.username }}</h1>
+        <form method="post" action="{% url 'change_username' %}" id="username-form" style="display: none;">
+            {% csrf_token %}
+            <input type="text" name="new_username" value="{{ user.username }}" class="input-field">
+            <button type="submit" class="btn">Сохранить</button>
+            <button type="button" id="cancel-username-btn" class="btn-cancel">Отмена</button>
+        </form>
+        <button id="edit-username-btn" class="btn">Изменить имя</button>
+
+        <p class="email" id="email-display">{{ user.email }}</p>
+        <form method="post" action="{% url 'change_email' %}" id="email-form" style="display: none;">
+            {% csrf_token %}
+            <input type="email" name="new_email" value="{{ user.email }}" class="input-field">
+            <button type="submit" class="btn">Сохранить</button>
+            <button type="button" id="cancel-email-btn" class="btn-cancel">Отмена</button>
+        </form>
+        <button id="edit-email-btn" class="btn">Изменить почту</button>
+
+        <div class="profile-buttons">
+            <a href="{% url 'change_pass' %}" class="btn">Сменить пароль</a>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit">Выйти</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    // Функция для отображения/скрытия формы имени
+    const editUsernameBtn = document.getElementById("edit-username-btn");
+    const usernameForm = document.getElementById("username-form");
+    const usernameDisplay = document.getElementById("username-display");
+    const cancelUsernameBtn = document.getElementById("cancel-username-btn");
+
+    editUsernameBtn.addEventListener("click", () => {
+        usernameForm.style.display = "block";
+        usernameDisplay.style.display = "none";
+        editUsernameBtn.style.display = "none";
+    });
+
+    cancelUsernameBtn.addEventListener("click", () => {
+        usernameForm.style.display = "none";
+        usernameDisplay.style.display = "block";
+        editUsernameBtn.style.display = "block";
+    });
+
+    // Функция для отображения/скрытия формы почты
+    const editEmailBtn = document.getElementById("edit-email-btn");
+    const emailForm = document.getElementById("email-form");
+    const emailDisplay = document.getElementById("email-display");
+    const cancelEmailBtn = document.getElementById("cancel-email-btn");
+
+    editEmailBtn.addEventListener("click", () => {
+        emailForm.style.display = "block";
+        emailDisplay.style.display = "none";
+        editEmailBtn.style.display = "none";
+    });
+
+    cancelEmailBtn.addEventListener("click", () => {
+        emailForm.style.display = "none";
+        emailDisplay.style.display = "block";
+        editEmailBtn.style.display = "block";
+    });
+</script>
+{% endblock %}

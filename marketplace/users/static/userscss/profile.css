@@ -1,0 +1,152 @@
+/* Контейнер профиля */
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Фото профиля */
+.profile-photo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #800080;
+}
+
+/* Информация о профиле */
+.profile-info {
+    margin-left: 30px;
+}
+
+.profile-info h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.profile-info .email {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Кнопки профиля */
+.profile-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+/* Общий стиль для кнопок */
+.profile-buttons .btn,
+.profile-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #800080; /* Фиолетовый фон */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.profile-buttons .btn:hover,
+.profile-buttons button:hover {
+    background-color: #9b4f9b; /* Светлее при наведении */
+    transform: scale(1.05); /* Легкое увеличение */
+}
+
+.profile-buttons button {
+    font-family: inherit; /* Наследует шрифт от родителя */
+}
+
+/* Поле ввода для изменения имени и почты */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Кнопки */
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #800080;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #9b4f9b;
+    transform: scale(1.05);
+}
+
+/* Кнопка отмены */
+.btn-cancel {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #800080;
+    background-color: #fff;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    margin-left: 10px;
+}
+
+.btn-cancel:hover {
+    background-color: #f3e1f3;
+    color: #9b4f9b;
+    transform: scale(1.05);
+}
+
+/* Контейнер для сообщений */
+.messages {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+/* Стиль для каждого сообщения */
+.alert {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Разные типы сообщений */
+.alert-info {
+    background-color: #e7f3fe;
+    color: #3178c6;
+    border: 1px solid #bee3f8;
+}
+
+.alert-success {
+    background-color: #e6f7e9;
+    color: #2d6a4f;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #fbeaea;
+    color: #b63b4d;
+    border: 1px solid #f5c6cb;
+}

@@ -1,9 +1,11 @@
 from django.views.generic import CreateView, View, TemplateView
 from django.utils.http import urlsafe_base64_decode
+from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
 from django.contrib.sites.shortcuts import get_current_site
 
 from .forms import CreateUserForm, ChangePasswordForm, ConfirmPasswordChangeForm
@@ -37,7 +39,7 @@ class CreateUserView(UserIsNotAuthenticated, CreateView):
         return context
 
 
-class LoginUserView(LoginView):
+class LoginUserView(UserIsNotAuthenticated, LoginView):
     template_name = 'users/login.html'
 
     def get_context_data(self, **kwargs):
@@ -51,18 +53,56 @@ class LoginUserView(LoginView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ChangePasswordView(View):
+class Profile(LoginRequiredMixin, View):
     def get(self, request):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        else:
-            form = ChangePasswordForm(user=request.user)
+        context = {
+            'title': 'Профиль',
+            'user': request.user
+        }
+        return render(request, 'users/profile.html', context=context)
 
-            context = {
-                'title': 'Изменение пароля',
-                'form': form
-            }
-            return render(request, 'users/change_password.html', context=context)
+
+class ChangeUsernameView(LoginRequiredMixin, View):
+    def post(self, request):
+        new_username = request.POST.get('new_username')
+        if new_username:
+            if not User.objects.get(username=new_username):
+                user = request.user
+                user.username = new_username
+                user.save()
+                messages.success(request, 'Имя пользователя успешно изменено.')
+            else:
+                messages.error(request, 'Это имя уже занято!!!')
+        else:
+            messages.error(request, 'Введите имя пользователя!!!')
+        return redirect('profile')
+
+
+class ChangeEmailView(LoginRequiredMixin, View):
+    def post(self, request):
+        new_email = request.POST.get('new_email')
+        if new_email:
+            if not User.objects.get(email=new_email):
+                user = request.user
+                user.email = new_email
+                user.save()
+                messages.success(request, 'Ваша почта успешно изменена.')
+            else:
+                messages.error(request, 'Эта почта уже занята!!!')
+        else:
+            messages.error(request, 'Введите email!!!')
+        return redirect('profile')
+
+
+class ChangePasswordView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = ChangePasswordForm(user=request.user)
+
+        context = {
+            'title': 'Изменение пароля',
+            'form': form
+        }
+        return render(request, 'users/change_password.html', context=context)
 
     def post(self, request):
         form = ChangePasswordForm(request.POST, user=request.user)
@@ -83,15 +123,15 @@ class ChangePasswordView(View):
         return render(request, 'users/change_password.html', context=context)
 
 
-class ConfirmPasswordChangeView(View):
+class ConfirmPasswordChangeView(LoginRequiredMixin, View):
     def get(self, request):
-        if not request.user.is_authenticated:
-            return redirect('login')
         form = ConfirmPasswordChangeForm()
         return render(request, 'users/confirm_password_change.html', context={'form': form})
 
     def post(self, request):
         form = ConfirmPasswordChangeForm(request.POST)
+        error_message = None
+
         if form.is_valid():
             user = request.user
             code = form.cleaned_data["code"]
@@ -105,13 +145,23 @@ class ConfirmPasswordChangeView(View):
                         update_session_auth_hash(request, user)
                         confirmation.delete()
                         return redirect('home')
+                    else:
+                        error_message = 'Не удалось сменить пароль.'
+                else:
+                    error_message = 'Неверный код подтверждения или код устарел.'
             except PasswordChangeConfirmation.DoesNotExist:
-                form.add_error('confirmation_code', 'Код подтверждения не найден.')
+                error_message = 'Код подтверждения не найден.'
 
-        return render(request, 'users/confirm_password_change.html',{'form': form, 'title': 'Подтверждение смены пароля'})
+        context = {
+            'form': form,
+            'error_message': error_message,
+            'title': 'Подтверждение смены пароля'
+        }
+
+        return render(request, 'users/confirm_password_change.html',context=context)
 
 
-class ResendCodeView(View):
+class ResendCodeView(LoginRequiredMixin, View):
     def post(self, request):
         user = request.user
         code, _ = PasswordChangeConfirmation.objects.get_or_create(user=user)
