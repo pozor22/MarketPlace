@@ -1,12 +1,12 @@
 from django.views.generic import CreateView, View, TemplateView
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.sites.shortcuts import get_current_site
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, ChangePasswordForm
 from .tasks import send_email_active_account
 from .models import User
 from .mixins import UserIsNotAuthenticated
@@ -19,6 +19,11 @@ class CreateUserView(UserIsNotAuthenticated, CreateView):
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
+
+        image = self.request.FILES.get('image')
+        if image:
+            user.avatar = image.read()
+
         user.save()
 
         current_site = get_current_site(self.request)
@@ -30,6 +35,51 @@ class CreateUserView(UserIsNotAuthenticated, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регистрация'
         return context
+
+
+class LoginUserView(LoginView):
+    template_name = 'users/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Вход'
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class ChangePasswordView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        else:
+            form = ChangePasswordForm(user=request.user)
+
+            context = {
+                'title': 'Изменение пароля',
+                'form': form
+            }
+            return render(request, 'users/change_password.html', context=context)
+
+    def post(selfself, request):
+        form = ChangePasswordForm(request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            user.set_password(form.cleaned_data['new_password'])
+            user.save()
+
+            update_session_auth_hash(request, user)
+
+            return redirect('home')
+        else:
+            context = {
+                'title': 'Изменение пароля',
+                'form': form
+            }
+            return render(request, 'users/change_password.html', context=context)
 
 
 class UserConfirmEmailView(View):
@@ -74,17 +124,3 @@ class EmailConfirmationFailedView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Ваш электронный адрес не активирован'
         return context
-
-
-class LoginUserView(LoginView):
-    template_name = 'users/login.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Вход'
-        return context
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('home')
-        return super().dispatch(request, *args, **kwargs)

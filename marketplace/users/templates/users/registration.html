@@ -8,17 +8,34 @@
 {% endblock %}
 
 {% block main %}
-  <div class="registration-container">
+<div class="registration-container">
     <h1>Регистрация</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-            {{ form.as_p }}
+            {{ form.image.label_tag }}  <!-- Метка для загрузки аватарки -->
+            {{ form.image }}            <!-- Поле для загрузки аватарки -->
+        </div>
+        <div class="form-group">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+        </div>
+        <div class="form-group">
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+        </div>
+        <div class="form-group">
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
         </div>
         <button type="submit" class="btn-submit">Зарегистрироваться</button>
     </form>
     <div class="auth-links">
         <a href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
     </div>
-  </div>
+</div>
 {% endblock %}
