@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение смены пароля</title>
+    <style>
+        .verification-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <p>Привет {{ user.username }},</p>
+    <p>Вы пытаетесь поменять свой пароль. Для этого введите код, действителен в течение 10 минут.</p>
+
+    <div class="verification-code">
+        Ваш код подтверждения: <span>{{ code }}</span>
+    </div>
+
+    <p>Если вы не запрашивали смену пароля, просто проигнорируйте это письмо.</p>
+
+    <p>С уважением,<br>Команда VovaShop</p>
+</body>
+</html>

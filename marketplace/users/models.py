@@ -1,6 +1,7 @@
+import base64
+import random
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-import base64
 
 
 class User(AbstractUser):
@@ -24,3 +25,18 @@ class User(AbstractUser):
                 raise FileNotFoundError(f"Дефолтное изображение не найдено по пути: {default_image_path}")
 
         super().save(*args, **kwargs)
+
+
+class PasswordChangeConfirmation(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="password_change_confirmation")
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def generate_confirmation_code(self):
+        self.code = f'{random.randint(100000, 999999)}'
+        self.save()
+
+    def is_code_valid(self):
+        from datetime import timedelta
+        from django.utils.timezone import now
+        return now() - self.created_at <= timedelta(minutes=10)

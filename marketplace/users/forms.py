@@ -40,3 +40,7 @@ class ChangePasswordForm(forms.Form):
         if old_password == new_password:
             raise forms.ValidationError('Новый пароль не должен совпадать со старым')
         return cleaned_data
+
+
+class ConfirmPasswordChangeForm(forms.Form):
+    code = forms.CharField(label="Код подтверждения", widget=forms.TextInput(attrs={'class': 'form-control'}))
