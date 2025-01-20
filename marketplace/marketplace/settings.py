@@ -159,3 +159,19 @@ EMAIL_PORT = EM_PORT
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = EMAIL_USER
 EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
+
+
+roles = {
+    'buyer': {
+        'name': 'buyer',
+        'permissions': ['view_user', 'change_user', 'view_product'],
+    },
+    'seller': {
+        'name': 'seller',
+        'permissions': ['view_user', 'change_user', 'view_product', 'add_product', 'change_product', 'delete_product'],
+    },
+    'pvz': { # Владелец пункта выдачи заказов
+        'name': 'pvz',
+        'permissions': ['view_user', 'change_user', 'view_product', 'add_product', 'change_product', 'delete_product'],
+    }
+}
