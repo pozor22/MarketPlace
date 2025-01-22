@@ -9,7 +9,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 
-from .forms import CreateUserForm, ChangePasswordForm, ConfirmPasswordChangeForm
+from .forms import CreateUserForm, ChangePasswordForm, ConfirmPasswordChangeForm, UpdateToSellerUserForm
 from .tasks import send_email_active_account, send_email_code
 from .models import User, PasswordChangeConfirmation
 from .mixins import UserIsNotAuthenticated
@@ -64,9 +64,46 @@ class Profile(LoginRequiredMixin, View):
     def get(self, request):
         context = {
             'title': 'Профиль',
-            'user': request.user
+            'user': request.user,
+            'group': request.user.groups.first().name
         }
         return render(request, 'users/profile.html', context=context)
+
+
+class UpdateToSellerView(LoginRequiredMixin, View):
+    def get(self, request):
+        context = {
+            'title': 'Стать продавцом',
+            'form': UpdateToSellerUserForm()
+        }
+        return render(request, 'users/update_to_seller.html', context=context)
+
+    def post(self, request):
+        form = UpdateToSellerUserForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            user.inn = form.cleaned_data['inn']
+            user.address = form.cleaned_data['address']
+            user.phone_number = form.cleaned_data['phone_number']
+
+            user.groups.clear()
+            user.user_permissions.clear()
+
+            group = Group.objects.get(name='seller')
+            user.groups.add(group)
+
+            permissions = group.permissions.all()
+            user.user_permissions.set(permissions)
+
+            user.save()
+            messages.success(request, 'Вы успешно стали продавцом.')
+            return redirect('profile')
+
+        context = {
+            'title': 'Стать продавцом',
+            'form': form
+        }
+        return render(request, 'users/update_to_seller.html', context=context)
 
 
 class ChangeUsernameView(LoginRequiredMixin, View):
@@ -151,7 +188,9 @@ class ConfirmPasswordChangeView(LoginRequiredMixin, View):
                         user.save()
                         update_session_auth_hash(request, user)
                         confirmation.delete()
-                        return redirect('home')
+
+                        messages.success(request, 'Вы успешно изменили пароль.')
+                        return redirect('profile')
                     else:
                         error_message = 'Не удалось сменить пароль.'
                 else:

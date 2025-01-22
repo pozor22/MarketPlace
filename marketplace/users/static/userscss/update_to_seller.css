@@ -1,0 +1,121 @@
+/* update_to_seller.css */
+
+/* Основной контейнер для формы */
+.update-to-seller-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Стили для формы */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Стили для каждого поля ввода */
+textarea,
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Стили для кнопки отправки */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #800080; /* Фиолетовый фон */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #9b4f9b; /* Более светлый фиолетовый при наведении */
+}
+
+/* Стили для отображения ошибок */
+.field-error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-errors {
+    color: red;
+    background-color: #f9d6d5;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Дополнительный отступ между полями */
+.form-group {
+    margin-bottom: 5px;
+}
+
+/* Стили для ссылок */
+.auth-links {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.auth-links a {
+    text-decoration: none;
+    color: #800080;
+    font-size: 14px;
+}
+
+.auth-links a:hover {
+    color: #9b4f9b;
+}
+
+/* Общие стили для всех инпутов */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Стили для поля номера телефона */
+.phone-input {
+    background-color: #f9f9f9; /* Светлый фон */
+    border: 1px solid #ccc; /* Цвет рамки */
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* При фокусе */
+.phone-input:focus {
+    border-color: #800080; /* Фиолетовый */
+    box-shadow: 0 0 5px rgba(128, 0, 128, 0.2); /* Лёгкое свечение */
+}
+
+/* Подсказка (help_text) */
+.phone-input + small {
+    color: #666;
+    font-size: 0.9em;
+}

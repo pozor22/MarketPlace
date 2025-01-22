@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+import re
 
 from .models import User
 
@@ -10,6 +11,42 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['image', 'username', 'email', 'password1', 'password2']
+
+
+class UpdateToSellerUserForm(forms.Form):
+    inn = forms.CharField(
+        label="ИНН",
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Введите ИНН', 'class': 'form-control'}),
+        help_text="ИНН должен содержать ровно 12 цифр."
+    )
+    address = forms.CharField(
+        label="Адрес проживания",
+        required=True,
+        widget=forms.Textarea(attrs={'placeholder': 'Введите адрес', 'rows': 3, 'class': 'form-control'}),
+        help_text="Введите полный адрес проживания."
+    )
+    phone_number = forms.CharField(
+        label="Номер телефона",
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Введите номер телефона', 'class': 'form-control phone-input', 'type': 'tel', 'pattern': r'^(8|\+7)\d{10,15}'}),
+        help_text="Введите номер телефона в формате: +7 или 8-XXX-XXX-XXXX."
+    )
+
+    def clean_inn(self):
+        inn = self.cleaned_data.get('inn')
+        if not inn.isdigit():
+            raise forms.ValidationError("ИНН должен содержать только цифры.")
+        if len(inn) != 12:
+            raise forms.ValidationError("ИНН должен содержать ровно 12 цифр.")
+        return inn
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        # Проверяем, соответствует ли номер телефона формату XXX-XXX-XXXX
+        if not re.match(r'^(8|\+7)\d{10,15}', phone_number):
+            raise forms.ValidationError("Введите номер телефона в формате: +7 или 8-XXX-XXX-XXXX.")
+        return phone_number
 
 
 class ChangePasswordForm(forms.Form):

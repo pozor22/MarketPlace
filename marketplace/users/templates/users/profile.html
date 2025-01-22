@@ -55,6 +55,19 @@
     </div>
 </div>
 
+<div class="role-container">
+    {% if group == "buyer" %}
+        <p class="role-message">
+            Вы являетесь нашим покупателем, это отлично! А также вы можете стать продавцом.
+        </p>
+        <a href="{% url 'become_seller' %}" class="btn become-seller-btn">Стать продавцом</a>
+    {% elif group == "seller" %}
+        <p class="role-message">
+            Вы являетесь продавцом.
+        </p>
+    {% endif %}
+</div>
+
 {% endblock %}
 
 {% block script %}

@@ -160,7 +160,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = EMAIL_USER
 EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 
-
+# Роли пользователей
 roles = {
     'buyer': {
         'name': 'buyer',

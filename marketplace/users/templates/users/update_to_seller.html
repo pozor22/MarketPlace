@@ -1,0 +1,65 @@
+{% extends 'users/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'userscss/update_to_seller.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="update-to-seller-container">
+    <h1>Улучшение профиля до продавца</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Блок для отображения ошибок формы -->
+        {% if form.non_field_errors %}
+        <div class="form-errors">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form.inn.label_tag }}
+            {{ form.inn }}
+            {% if form.inn.errors %}
+            <div class="field-error">
+                {{ form.inn.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.address.label_tag }}
+            {{ form.address }}
+            {% if form.address.errors %}
+            <div class="field-error">
+                {{ form.address.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.phone_number.label_tag }}
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}
+            <div class="field-error">
+                {{ form.phone_number.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn-submit">Сохранить</button>
+
+    </form>
+
+    <div class="auth-links">
+        <a href="{% url 'home' %}">Вернуться на главную</a>
+    </div>
+</div>
+{% endblock %}

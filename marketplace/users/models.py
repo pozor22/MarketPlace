@@ -1,12 +1,43 @@
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
+from django.db import models
 import base64
 import random
-from django.contrib.auth.models import AbstractUser, Group
-from django.db import models
 
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     avatar = models.BinaryField(null=True, blank=True)
+    telegram_id = models.CharField(max_length=255, null=True, blank=True, unique=True)
+
+    # Данные для продавца
+    inn = models.CharField(
+        max_length=12,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{12}$',
+                message='ИНН должен содержать ровно 12 цифр.',
+                code='invalid_inn'
+            )
+        ],
+        verbose_name="ИНН"
+    )
+    address = models.TextField(null=True, blank=True, verbose_name="Адрес проживания")
+    phone_number = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?\d{10,15}$',
+                message='Номер телефона должен содержать от 10 до 15 цифр, с опциональным "+" в начале.',
+                code='invalid_phone_number'
+            )
+        ],
+        verbose_name="Номер телефона"
+    )
 
     def get_image_base64(self):
         """Возвращает изображение в формате base64 для использования в шаблоне"""
