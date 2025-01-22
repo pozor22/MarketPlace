@@ -1,0 +1,111 @@
+/* Основной контейнер для формы */
+.create-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Стили для формы */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Стили для каждого поля ввода */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Для полей, которые должны быть на половину экрана */
+.form-group .half-width {
+    width: 48%;
+    display: inline-block;
+    margin-right: 4%;
+}
+
+/* Стили для кнопки отправки */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #800080; /* Фиолетовый фон */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #9b4f9b; /* Более светлый фиолетовый при наведении */
+}
+
+/* Стили для загрузки изображения */
+.file-upload-container {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Настройка внешнего вида кнопки выбора файла */
+input[type="file"]::file-selector-button {
+    padding: 10px 15px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #9b4f9b;
+}
+
+/* Дополнительные стили для ошибок */
+.field-error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-errors {
+    color: red;
+    background-color: #f9d6d5;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+

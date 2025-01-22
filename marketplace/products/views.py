@@ -1,6 +1,10 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from .models import Product
+from django.db.transaction import commit
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
+
+from .models import Product, ProductImage
+from .forms import CreateProductForm
 
 
 class HomeProducts(ListView):
@@ -25,4 +29,25 @@ class ProductDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
+        return context
+
+
+class CreateProductView(CreateView):
+    model = Product
+    template_name = 'products/create_product.html'
+    form_class = CreateProductForm
+
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        product.author = self.request.user
+        product.save()
+
+        image = self.request.FILES.get('image')
+        ProductImage.objects.create(product=product, image=image.read())
+
+        return redirect('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Create product'
         return context

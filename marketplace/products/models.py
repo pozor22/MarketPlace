@@ -1,32 +1,45 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 import base64
 
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.BinaryField(null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.PositiveIntegerField(validators=[MinValueValidator(1)], blank=False, default=1)
+    total_price = models.PositiveIntegerField(validators=[MinValueValidator(1)], blank=False, default=1)
+    discount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='products')
-
-    def get_image_base64(self):
-        """Возвращает изображение в формате base64 для использования в шаблоне"""
-        if self.image:
-            return base64.b64encode(self.image).decode('utf-8')
-        return None
+    is_available = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        # Если поле `image` пустое, использовать дефолтное изображение
-        if not self.image:
-            default_image_path = 'products/media/products/images/default_avatar_product.png'
-            try:
-                with open(default_image_path, 'rb') as f:
-                    self.image = f.read()
-            except FileNotFoundError:
-                raise FileNotFoundError(f"Дефолтное изображение не найдено по пути: {default_image_path}")
+        if self.discount > 0:
+            self.total_price = self.price - (self.price * self.discount / 100)
+        else:
+            self.total_price = self.price
 
         super().save(*args, **kwargs)  # Сохранение объекта
 
     def __str__(self):
         return self.name
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.BinaryField()  # Хранение изображения в бинарном формате
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Конвертируем изображение в бинарный формат, если оно в виде пути
+        if isinstance(self.image, str):  # Если путь к файлу
+            with open(self.image, 'rb') as f:
+                self.image = f.read()
+        super().save(*args, **kwargs)  # Сохранение объекта
+
+    def get_image_base64(self):
+        """Возвращает изображение в формате base64 для использования в шаблоне"""
+        return base64.b64encode(self.image).decode('utf-8')
+
+    def __str__(self):
+        return f"Image for {self.product.name}"

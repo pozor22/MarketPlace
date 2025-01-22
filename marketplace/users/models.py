@@ -8,7 +8,6 @@ import random
 class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     avatar = models.BinaryField(null=True, blank=True)
-    telegram_id = models.CharField(max_length=255, null=True, blank=True, unique=True)
 
     # Данные для продавца
     inn = models.CharField(

@@ -25,7 +25,7 @@ header .auth-buttons a,
 header .auth-buttons button {
     text-decoration: none;
     color: #fff;
-    background-color: #9b4dca; /* Фиолетовый фон кнопок */
+    background-color: #800080; /* Фиолетовый фон кнопок */
     border: none;
     padding: 8px 16px;
     border-radius: 5px;
@@ -72,8 +72,8 @@ div {
 
 /* Стили для кнопки поиска */
 .search-button {
-    padding: 8px 16px; /* Увеличены отступы для кнопки */
-    background-color: #9b4dca; /* Фиолетовый фон */
+    padding: 6px 22px; /* Увеличены отступы для кнопки */
+    background-color: #800080; /* Фиолетовый фон */
     color: #fff;
     border: none;
     border-radius: 5px;
