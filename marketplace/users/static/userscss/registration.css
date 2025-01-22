@@ -99,3 +99,19 @@ input[type="email"] {
 .form-group {
     margin-bottom: 5px;
 }
+
+.field-error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-errors {
+    color: red;
+    background-color: #f9d6d5;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+

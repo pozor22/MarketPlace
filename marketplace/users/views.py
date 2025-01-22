@@ -2,10 +2,11 @@ from django.views.generic import CreateView, View, TemplateView
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 
 from .forms import CreateUserForm, ChangePasswordForm, ConfirmPasswordChangeForm
@@ -27,6 +28,12 @@ class CreateUserView(UserIsNotAuthenticated, CreateView):
             user.avatar = image.read()
 
         user.save()
+
+        group = Group.objects.get(name='buyer')
+        user.groups.add(group)
+
+        permissions = group.permissions.all()
+        user.user_permissions.set(permissions)
 
         current_site = get_current_site(self.request)
         domain = current_site.domain
