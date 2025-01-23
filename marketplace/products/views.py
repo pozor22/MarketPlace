@@ -42,8 +42,12 @@ class CreateProductView(CreateView):
         product.author = self.request.user
         product.save()
 
-        image = self.request.FILES.get('image')
-        ProductImage.objects.create(product=product, image=image.read())
+        images = self.request.FILES.getlist('images')
+        for image in images:
+            ProductImage.objects.create(
+                product=product,
+                image=image.read()  # Сохраняем содержимое файла в бинарном формате
+            )
 
         return redirect('home')
 

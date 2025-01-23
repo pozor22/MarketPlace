@@ -12,7 +12,6 @@
     <h1>Добавление товара</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-
         <!-- Блок для отображения ошибок формы -->
         {% if form.non_field_errors %}
         <div class="form-errors">
@@ -25,13 +24,13 @@
         {% endif %}
 
         <div class="form-group">
-            {{ form.image.label_tag }}
+            {{ form.images.label_tag }}
             <div class="file-upload-container">
-                {{ form.image }}
+                {{ form.images }}
             </div>
-            {% if form.image.errors %}
+            {% if form.images.errors %}
             <div class="field-error">
-                {{ form.image.errors }}
+                {{ form.images.errors }}
             </div>
             {% endif %}
         </div>
