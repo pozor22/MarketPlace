@@ -8,21 +8,32 @@
 {% endblock %}
 
 {% block main %}
-  <div class="products-container">
+<div class="products-container">
     <h1>Наши товары</h1>
     <div class="products-list">
       {% for product in products %}
-        <a href="{% url 'product_detail' product.id %}" class="product-card">
-          <img
-            src="data:image/png;base64,{{ product.get_image_base64 }}"
-            alt="{{ product.name }}"
-            class="product-image"
-          >
+        <div class="product-card">
+          <!-- Слайдер -->
+          <div class="product-slider" id="slider-{{ product.id }}">
+            {% for image in product.images.all %}
+              <div class="slider-item">
+                <img
+                  src="data:image/png;base64,{{ image.get_image_base64 }}"
+                  alt="{{ product.name }}"
+                  class="product-image"
+                >
+              </div>
+            {% empty %}
+              <div class="slider-item">
+                <p>Нет изображений</p>
+              </div>
+            {% endfor %}
+          </div>
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
           <p class="product-price">Цена: {{ product.price }}₽</p>
           <p class="product-author">Автор: {{ product.author.username }}</p>
-        </a>
+        </div>
       {% empty %}
         <p>Нет доступных товаров.</p>
       {% endfor %}
@@ -45,4 +56,39 @@
   </div>
 {% endblock %}
 
+{% block script %}
+<!-- Подключение слайдера -->
+  <script>
+    // Пример простого слайдера на чистом JS
+    document.querySelectorAll('.product-slider').forEach(slider => {
+      let currentIndex = 0;
+      const items = slider.querySelectorAll('.slider-item');
 
+      function showSlide(index) {
+        items.forEach((item, i) => {
+          item.style.display = i === index ? 'block' : 'none';
+        });
+      }
+
+      showSlide(currentIndex);
+
+      // Добавьте кнопки для управления (вперед/назад)
+      const nextButton = document.createElement('button');
+      nextButton.innerText = 'Вперед';
+      nextButton.onclick = () => {
+        currentIndex = (currentIndex + 1) % items.length;
+        showSlide(currentIndex);
+      };
+
+      const prevButton = document.createElement('button');
+      prevButton.innerText = 'Назад';
+      prevButton.onclick = () => {
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        showSlide(currentIndex);
+      };
+
+      slider.appendChild(prevButton);
+      slider.appendChild(nextButton);
+    });
+  </script>
+{% endblock %}

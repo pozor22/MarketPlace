@@ -106,3 +106,76 @@ h1 {
   margin: 0 10px;
   display: inline-block; /* Чтобы элемент вел себя как блок для центрирования */
 }
+/* Стили для слайдера */
+.product-slider {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  overflow: hidden;
+  border: 1px solid #ddd; /* Рамка слайдера */
+  border-radius: 8px; /* Скругление углов */
+  background-color: #fff; /* Белый фон */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
+  margin-bottom: 15px; /* Отступ от описания */
+}
+
+/* Элементы слайдера */
+.slider-item {
+  display: none;
+  text-align: center;
+}
+
+.slider-item img {
+  width: 100%;
+  height: 200px; /* Фиксированная высота */
+  object-fit: cover; /* Обрезка изображения */
+  border-radius: 8px; /* Скругление углов */
+}
+
+/* Кнопки слайдера */
+.product-slider button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #9b4dca; /* Фиолетовый цвет кнопки */
+  color: #fff;
+  border: none;
+  border-radius: 50%; /* Круглая форма */
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Тень */
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.product-slider button:hover {
+  background-color: #7f34b5; /* Темнее фиолетовый при наведении */
+  transform: scale(1.1); /* Увеличение при наведении */
+}
+
+.product-slider button:nth-of-type(1) {
+  left: 10px;
+}
+
+.product-slider button:nth-of-type(2) {
+  right: 10px;
+}
+
+/* Анимация для смены слайдов */
+.slider-item-active {
+  display: block; /* Активный слайд видим */
+  animation: fadeIn 0.5s ease; /* Плавное появление */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

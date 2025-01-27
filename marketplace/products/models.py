@@ -3,6 +3,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 import base64
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=255, unique=True)  # Название категории
+    description = models.TextField(blank=True, null=True)  # Описание категории (необязательно)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -11,6 +19,7 @@ class Product(models.Model):
     discount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='products', default=1)
     is_available = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
