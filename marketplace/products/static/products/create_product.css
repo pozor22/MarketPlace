@@ -109,3 +109,53 @@ input[type="file"]::file-selector-button:hover {
     margin-bottom: 15px;
 }
 
+/* Стили для поля выбора категории */
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    appearance: none; /* Убирает стандартный вид стрелки в некоторых браузерах */
+    -webkit-appearance: none; /* Для Safari */
+    -moz-appearance: none; /* Для Firefox */
+}
+
+/* Стили для стрелки в поле выбора */
+.select-container {
+    position: relative;
+}
+
+.select-container::after {
+    content: "▼";
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #800080;
+    font-size: 12px;
+}
+
+/* Стили для фокуса на поле выбора */
+select:focus {
+    border-color: #800080;
+    outline: none;
+    box-shadow: 0 0 5px rgba(128, 0, 128, 0.5);
+}
+
+/* Стили для опций в поле выбора */
+select option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Стили для опций при наведении */
+select option:hover {
+    background-color: #800080;
+    color: #fff;
+}

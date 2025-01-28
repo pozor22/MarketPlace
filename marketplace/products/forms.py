@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Product, ProductImage
+from .models import Product, Category
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -23,6 +23,7 @@ class MultipleFileField(forms.FileField):
 
 class CreateProductForm(forms.ModelForm):
     images = MultipleFileField()
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), label="Категория")
 
     class Meta:
         model = Product

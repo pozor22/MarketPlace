@@ -23,6 +23,7 @@
         </div>
         {% endif %}
 
+        <!-- Поле для загрузки изображений -->
         <div class="form-group">
             {{ form.images.label_tag }}
             <div class="file-upload-container">
@@ -35,6 +36,7 @@
             {% endif %}
         </div>
 
+        <!-- Поле для названия товара -->
         <div class="form-group">
             {{ form.name.label_tag }}
             {{ form.name }}
@@ -45,6 +47,7 @@
             {% endif %}
         </div>
 
+        <!-- Поле для описания товара -->
         <div class="form-group">
             {{ form.description.label_tag }}
             {{ form.description }}
@@ -55,6 +58,18 @@
             {% endif %}
         </div>
 
+        <!-- Поле для выбора категории -->
+        <div class="form-group">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+            {% if form.category.errors %}
+            <div class="field-error">
+                {{ form.category.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для цены товара -->
         <div class="form-group">
             {{ form.price.label_tag }}
             {{ form.price }}
@@ -64,6 +79,8 @@
             </div>
             {% endif %}
         </div>
+
+        <!-- Кнопка отправки формы -->
         <button type="submit" class="btn-submit">Добавить товар</button>
     </form>
 </div>

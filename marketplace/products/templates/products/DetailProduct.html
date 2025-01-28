@@ -10,18 +10,60 @@
 {% block main %}
 <div class="product-detail-container">
     <div class="product-detail-image">
-        <img
-            src="data:image/png;base64,{{ product.get_image_base64 }}"
-            alt="{{ product.name }}"
-            class="product-image"
-        >
+        <!-- Слайдер для фотографий товара -->
+        <div class="product-slider">
+            {% for image in product.images.all %}
+                <div class="slider-item">
+                    <img
+                        src="data:image/png;base64,{{ image.get_image_base64 }}"
+                        alt="{{ product.name }} image {{ forloop.counter }}"
+                    >
+                </div>
+            {% endfor %}
+        </div>
     </div>
     <div class="product-detail-info">
         <h1>{{ product.name }}</h1>
         <p class="product-description">{{ product.description }}</p>
+        <p class="product-category">Категория: {{ product.category.name }}</p>
         <p class="product-price">Цена: {{ product.price }}₽</p>
         <p class="product-author">Автор: {{ product.author.username }}</p>
         <a href="{% url 'home' %}" class="back-link">Вернуться к товарам</a>
     </div>
 </div>
 {% endblock %}
+
+{% block script %}
+<script>
+    document.querySelectorAll('.product-slider').forEach(slider => {
+        let currentIndex = 0;
+        const items = slider.querySelectorAll('.slider-item');
+
+        function showSlide(index) {
+            items.forEach((item, i) => {
+                item.style.display = i === index ? 'block' : 'none';
+            });
+        }
+
+        showSlide(currentIndex);
+
+        const nextButton = document.createElement('button');
+        nextButton.innerText = 'Вперед';
+        nextButton.onclick = () => {
+            currentIndex = (currentIndex + 1) % items.length;
+            showSlide(currentIndex);
+        };
+
+        const prevButton = document.createElement('button');
+        prevButton.innerText = 'Назад';
+        prevButton.onclick = () => {
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            showSlide(currentIndex);
+        };
+
+        slider.appendChild(prevButton);
+        slider.appendChild(nextButton);
+    });
+</script>
+{% endblock %}
+
