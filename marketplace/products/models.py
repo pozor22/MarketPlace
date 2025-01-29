@@ -3,6 +3,17 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 import base64
 
 
+class Like(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='likes')
+
+    class Meta:
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.product.name}"
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)  # Название категории
     description = models.TextField(blank=True, null=True)  # Описание категории (необязательно)
@@ -29,6 +40,15 @@ class Product(models.Model):
             self.total_price = self.price
 
         super().save(*args, **kwargs)  # Сохранение объекта
+
+    def get_comments_count(self):
+        return self.comments.count()
+
+    def get_likes_count(self):
+        return self.likes.count()
+
+    def is_liked_by(self, user):
+        return self.likes.filter(user=user).exists()
 
     def __str__(self):
         return self.name

@@ -11,6 +11,7 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 /* Стили для изображения товара */
@@ -34,8 +35,30 @@
 .product-detail-info {
   flex: 2 1 400px;
   padding: 10px;
+  position: relative;
 }
 
+/* Кнопка лайка */
+.like-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #800080;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.like-btn:hover {
+  background: #7f34b5;
+}
+
+/* Заголовок товара */
 .product-detail-info h1 {
   color: #333;
   font-size: 2em;
@@ -88,7 +111,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 15px;
   display: flex;
-  flex-direction: column; /* Для размещения кнопок снизу */
+  flex-direction: column;
   align-items: center;
 }
 
@@ -109,13 +132,13 @@
 .slider-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Интервал между кнопками */
-  margin-top: 10px; /* Отступ сверху */
+  gap: 10px;
+  margin-top: 10px;
 }
 
 /* Кнопки управления слайдером */
 .product-slider button {
-  background-color: #800080; /* Цвет кнопки */
+  background-color: #800080;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -127,21 +150,7 @@
 }
 
 .product-slider button:hover {
-  background-color: #7f34b5; /* Темнее при наведении */
-}
-
-/* Левый и правый отступы для кнопок */
-.product-slider button:nth-of-type(1) {
-  left: 20px; /* Отступ слева */
-}
-
-.product-slider button:nth-of-type(2) {
-  right: 20px; /* Отступ справа */
-}
-
-/* Интервал между кнопками */
-.product-slider button + button {
-  margin-left: 10px;
+  background-color: #7f34b5;
 }
 
 /* Стили для категории */
@@ -150,6 +159,7 @@
   font-size: 1em;
   margin-bottom: 10px;
 }
+
 
 /* Общий стиль для блока комментариев */
 .comments-container {

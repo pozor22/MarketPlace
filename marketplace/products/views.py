@@ -1,8 +1,11 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.utils.timezone import localtime
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 
-from .models import Product, ProductImage
+from .models import Product, ProductImage, Like
 from .forms import CreateProductForm, CreateCommentForm
 
 
@@ -37,11 +40,14 @@ class ProductDetail(DetailView):
         context['title'] = self.object.name
         context['form_comment'] = form_comment
         context['comments'] = comments
+        context['is_liked'] = self.object.is_liked_by(self.request.user) if self.request.user.is_authenticated else False
+        context['likes_count'] = self.object.likes.count()
         return context
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('login')
+        if "like" in request.POST:
+            return self.like_product(request)
 
         product = self.get_object()
         form = CreateCommentForm(request.POST)
@@ -54,6 +60,21 @@ class ProductDetail(DetailView):
             return redirect('product_detail', pk=product.pk)
 
         return self.get(request, *args, **kwargs)
+
+    def like_product(self, request):
+        product = self.get_object()
+        like, created = Like.objects.get_or_create(product=product, user=request.user)
+
+        if not created:
+            like.delete()
+            liked = False
+        else:
+            liked = True
+
+        return JsonResponse({
+            "liked": liked,
+            "likes_count": product.likes.count()
+        })
 
 
 class CreateProductView(CreateView):

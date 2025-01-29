@@ -22,7 +22,13 @@
             {% endfor %}
         </div>
     </div>
+
     <div class="product-detail-info">
+        <button id="like-btn" class="like-btn" data-liked="{{ is_liked }}">
+            <span id="like-text">{% if is_liked %}💖 Лайкнуто{% else %}🤍 Лайк{% endif %}</span>
+            (<span id="likes-count">{{ likes_count }}</span>)
+        </button>
+
         <h1>{{ product.name }}</h1>
         <p class="product-description">{{ product.description }}</p>
         <p class="product-category">Категория: {{ product.category.name }}</p>
@@ -67,6 +73,30 @@
 
 {% block script %}
 <script>
+    document.getElementById("like-btn").addEventListener("click", function() {
+    fetch("", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "like=1"
+    })
+    .then(response => response.json())
+    .then(data => {
+        let btn = document.getElementById("like-btn");
+        let text = document.getElementById("like-text");
+        let count = document.getElementById("likes-count");
+
+        if (data.liked) {
+            text.innerHTML = "💖 Лайкнуто";
+        } else {
+            text.innerHTML = "🤍 Лайк";
+        }
+        count.innerHTML = data.likes_count;
+    });
+});
+
     document.querySelectorAll('.product-slider').forEach(slider => {
         let currentIndex = 0;
         const items = slider.querySelectorAll('.slider-item');
