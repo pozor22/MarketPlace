@@ -24,6 +24,8 @@
     </div>
 
     <div class="product-detail-info">
+        <p>Оценка: {{ ratings_count }} / 5</p>
+
         <button id="like-btn" class="like-btn" data-liked="{{ is_liked }}">
             <span id="like-text">{% if is_liked %}💖 Лайкнуто{% else %}🤍 Лайк{% endif %}</span>
             (<span id="likes-count">{{ likes_count }}</span>)
@@ -46,6 +48,10 @@
     <div class="comment-form-container">
         <form method="post" class="comment-form">
             {% csrf_token %}
+            <div>
+                {{ form_comment.rate.label_tag }}
+                {{ form_comment.rate }}
+            </div>
             <div class="form-group">
                 {{ form_comment.text.label_tag }}
                 {{ form_comment.text }}
@@ -61,6 +67,7 @@
         {% for comment in comments %}
         <div class="comment">
             <p class="comment-author">{{ comment.author.username }}</p>
+            <p class="comment-author">Оценка: {{ comment.rate }} / 5</p>
             <p class="comment-text">{{ comment.text }}</p>
             <p class="comment-date">{{ comment.formatted_date }}</p>
         </div>

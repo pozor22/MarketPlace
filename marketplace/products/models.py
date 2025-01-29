@@ -41,6 +41,9 @@ class Product(models.Model):
 
         super().save(*args, **kwargs)  # Сохранение объекта
 
+    def get_ratings(self):
+        return self.comments.aggregate(models.Avg('rate'))['rate__avg']
+
     def get_comments_count(self):
         return self.comments.count()
 
@@ -58,10 +61,14 @@ class Comment(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
+    rate = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], blank=False, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('author', 'product')
+
     def __str__(self):
-        return f"Comment for {self.product.name}"
+        return f"Comment for {self.product.name} and rate {self.rate}"
 
 
 class ProductImage(models.Model):

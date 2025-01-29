@@ -1,4 +1,6 @@
+from django.db.transaction import commit
 from django.shortcuts import redirect
+from django.template.defaulttags import comment
 from django.views.generic import ListView, DetailView, CreateView
 from django.utils.timezone import localtime
 from django.contrib.auth.decorators import login_required
@@ -34,12 +36,14 @@ class ProductDetail(DetailView):
         form_comment = CreateCommentForm()
 
         comments = self.object.comments.all().order_by('-created_at')
+
         for comment in comments:
             comment.formatted_date = localtime(comment.created_at).strftime("%d.%m.%Y %H:%M")
 
         context['title'] = self.object.name
         context['form_comment'] = form_comment
         context['comments'] = comments
+        context['ratings_count'] = self.object.get_ratings()
         context['is_liked'] = self.object.is_liked_by(self.request.user) if self.request.user.is_authenticated else False
         context['likes_count'] = self.object.likes.count()
         return context
@@ -56,7 +60,9 @@ class ProductDetail(DetailView):
             comment = form.save(commit=False)
             comment.product = product
             comment.author = request.user
+            comment.rate = form.cleaned_data['rate']
             comment.save()
+
             return redirect('product_detail', pk=product.pk)
 
         return self.get(request, *args, **kwargs)
