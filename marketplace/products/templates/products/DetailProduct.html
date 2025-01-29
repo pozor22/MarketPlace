@@ -31,6 +31,38 @@
         <a href="{% url 'home' %}" class="back-link">Вернуться к товарам</a>
     </div>
 </div>
+
+<!-- Блок комментариев -->
+<div class="comments-container">
+    <h2>Комментарии</h2>
+
+    {% if user.is_authenticated %}
+    <div class="comment-form-container">
+        <form method="post" class="comment-form">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form_comment.text.label_tag }}
+                {{ form_comment.text }}
+            </div>
+            <button type="submit" class="comment-button">Оставить комментарий</button>
+        </form>
+    </div>
+    {% else %}
+    <p class="not-authenticated">Войдите в аккаунт, чтобы оставить комментарий.</p>
+    {% endif %}
+
+    <div class="comments-list">
+        {% for comment in comments %}
+        <div class="comment">
+            <p class="comment-author">{{ comment.author.username }}</p>
+            <p class="comment-text">{{ comment.text }}</p>
+            <p class="comment-date">{{ comment.formatted_date }}</p>
+        </div>
+        {% empty %}
+        <p class="no-comments">Комментариев пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}

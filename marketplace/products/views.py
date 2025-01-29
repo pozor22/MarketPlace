@@ -1,10 +1,9 @@
-from django.db.transaction import commit
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView
+from django.utils.timezone import localtime
 
 from .models import Product, ProductImage
-from .forms import CreateProductForm
+from .forms import CreateProductForm, CreateCommentForm
 
 
 class HomeProducts(ListView):
@@ -28,8 +27,33 @@ class ProductDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        form_comment = CreateCommentForm()
+
+        comments = self.object.comments.all().order_by('-created_at')
+        for comment in comments:
+            comment.formatted_date = localtime(comment.created_at).strftime("%d.%m.%Y %H:%M")
+
         context['title'] = self.object.name
+        context['form_comment'] = form_comment
+        context['comments'] = comments
         return context
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        product = self.get_object()
+        form = CreateCommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.product = product
+            comment.author = request.user
+            comment.save()
+            return redirect('product_detail', pk=product.pk)
+
+        return self.get(request, *args, **kwargs)
 
 
 class CreateProductView(CreateView):

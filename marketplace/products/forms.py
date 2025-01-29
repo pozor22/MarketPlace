@@ -1,6 +1,8 @@
+from cProfile import label
+
 from django import forms
 
-from .models import Product, Category
+from .models import Product, Category, Comment
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -28,3 +30,9 @@ class CreateProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'description', 'price']
+
+
+class CreateCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
