@@ -20,14 +20,17 @@
         </div>
         <div class="auth-buttons">
             {% if user.is_authenticated %}
+                <a href="{% url 'mylike' %}" style="text-decoration: none; color: inherit;">Мои нравятся!</a>
                 <a href="{% url 'profile' %}" style="text-decoration: none; color: inherit;">
                     {% if user.avatar %}
                         <img src="data:image/png;base64,{{ user.get_image_base64 }}" alt="Avatar" class="user-avatar">
+                        Мой профиль
                     {% else %}
                         <img src="{% static 'users/images/default_avatar_user.png' %}" alt="Avatar" class="user-avatar">
+                        Мой профиль
                     {% endif %}
                 </a>
-                <p>Вы вошли как {{ user.username }}</p>
+                <p style="margin-left: 150px;">Вы вошли как: {{ user.username }}</p>
             {% else %}
                 <a href="{% url 'login' %}">Войти</a>
                 <a href="{% url 'registration' %}">Зарегистрироваться</a>

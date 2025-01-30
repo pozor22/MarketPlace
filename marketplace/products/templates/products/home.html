@@ -33,6 +33,11 @@
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
           <p>Категория: {{ product.category.name }}</p>
+          {% if product.get_ratings %}
+            <p class="product-price"> Оценка {{ product.get_ratings|floatformat:1 }} / 5</p>
+          {% else %}
+            <p class="product-price"> Нет оценок</p>
+          {% endif %}
           <p class="product-price">Цена: {{ product.price }}₽</p>
           <p class="product-author">Автор: {{ product.author.username }}</p>
           </a>

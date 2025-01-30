@@ -1,9 +1,4 @@
-from itertools import product
-from lib2to3.fixes.fix_input import context
-
-from django.db.transaction import commit
 from django.shortcuts import redirect
-from django.template.defaulttags import comment
 from django.views.generic import ListView, DetailView, CreateView
 from django.utils.timezone import localtime
 from django.contrib.auth.decorators import login_required
@@ -12,6 +7,7 @@ from django.http import JsonResponse
 
 from .models import Product, ProductImage, Like, Comment
 from .forms import CreateProductForm, CreateCommentForm
+from .mixins import SellerRequiredMixin, NotAuthenticatedRequiredMixin
 
 
 class HomeProducts(ListView):
@@ -28,9 +24,23 @@ class HomeProducts(ListView):
         return context
 
 
+class ProductsUserLiked(NotAuthenticatedRequiredMixin, ListView):
+    template_name = 'products/products_liked.html'
+    context_object_name = 'products'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Product.objects.prefetch_related('images').filter(likes__user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'MyLiked'
+        return context
+
+
 class ProductDetail(DetailView):
     model = Product
-    template_name = 'products/DetailProduct.html'
+    template_name = 'products/detail_product.html'
     context_object_name = 'product'
 
     def get_context_data(self, **kwargs):
@@ -51,7 +61,6 @@ class ProductDetail(DetailView):
         context['form_comment'] = form_comment
         context['comments'] = comments
         context['is_comment'] = is_comment
-        context['ratings_count'] = self.object.get_ratings()
         context['is_liked'] = self.object.is_liked_by(self.request.user) if self.request.user.is_authenticated else False
         context['likes_count'] = self.object.likes.count()
         return context
@@ -109,7 +118,7 @@ class ProductDetail(DetailView):
         })
 
 
-class CreateProductView(CreateView):
+class CreateProductView(SellerRequiredMixin, CreateView):
     model = Product
     template_name = 'products/create_product.html'
     form_class = CreateProductForm

@@ -39,7 +39,11 @@
 
     <!-- Остальная часть вашего шаблона -->
     <div class="product-detail-info">
-        <p>Оценка: {{ ratings_count }} / 5</p>
+        {% if product.get_ratings %}
+            <p> Оценка {{ product.get_ratings|floatformat:1 }} / 5</p>
+        {% else %}
+            <p> Нет оценок</p>
+        {% endif %}
         <button id="like-btn" class="like-btn" data-liked="{{ is_liked }}">
             <span id="like-text">{% if is_liked %}💖 Лайкнуто{% else %}🤍 Лайк{% endif %}</span>
             (<span id="likes-count">{{ likes_count }}</span>)
