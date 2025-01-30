@@ -10,27 +10,40 @@
 {% block main %}
 <div class="product-detail-container">
     <div class="product-detail-image">
-        <!-- Слайдер для фотографий товара -->
-        <div class="product-slider">
-            {% for image in product.images.all %}
-                <div class="slider-item">
-                    <img
-                        src="data:image/png;base64,{{ image.get_image_base64 }}"
-                        alt="{{ product.name }} image {{ forloop.counter }}"
-                    >
-                </div>
-            {% endfor %}
-        </div>
+        <!-- Проверка на количество фотографий -->
+        {% if product.images.count > 1 %}
+            <!-- Слайдер для фотографий товара -->
+            <div class="product-slider">
+                {% for image in product.images.all %}
+                    <div class="slider-item">
+                        <img
+                            src="data:image/png;base64,{{ image.get_image_base64 }}"
+                            alt="{{ product.name }} image {{ forloop.counter }}"
+                        >
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Если фотография одна, отображаем её без слайдера -->
+            {% if product.images.first %}
+                <img
+                    src="data:image/png;base64,{{ product.images.first.get_image_base64 }}"
+                    alt="{{ product.name }} image"
+                    class="single-image"
+                >
+            {% else %}
+                <p>Нет фотографий для этого товара.</p>
+            {% endif %}
+        {% endif %}
     </div>
 
+    <!-- Остальная часть вашего шаблона -->
     <div class="product-detail-info">
         <p>Оценка: {{ ratings_count }} / 5</p>
-
         <button id="like-btn" class="like-btn" data-liked="{{ is_liked }}">
             <span id="like-text">{% if is_liked %}💖 Лайкнуто{% else %}🤍 Лайк{% endif %}</span>
             (<span id="likes-count">{{ likes_count }}</span>)
         </button>
-
         <h1>{{ product.name }}</h1>
         <p class="product-description">{{ product.description }}</p>
         <p class="product-category">Категория: {{ product.category.name }}</p>
@@ -45,20 +58,58 @@
     <h2>Комментарии</h2>
 
     {% if user.is_authenticated %}
-    <div class="comment-form-container">
-        <form method="post" class="comment-form">
-            {% csrf_token %}
-            <div>
-                {{ form_comment.rate.label_tag }}
-                {{ form_comment.rate }}
+        {% if is_comment %}
+            <p>Ваш комментарий:</p>
+            <div class="comment-form-container">
+                <div class="user-comment">
+                    <p>Оценка: {{ comment.rate }} / 5</p>
+                    <p>{{ comment.text }}</p>
+                </div>
+                <div class="comment-buttons">
+                    <button id="edit-comment-btn" class="comment-button">Изменить комментарий</button>
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete" value="1">
+                        <button type="submit"
+                                onclick="return confirm('Удалить объект?')"
+                                class="comment-button delete-button">
+                            Удалить
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form_comment.text.label_tag }}
-                {{ form_comment.text }}
+            <div id="edit-comment-form-container" class="edit-comment-form-container" style="display:none;">
+                <form method="post" class="comment-form">
+                    {% csrf_token %}
+                    <div>
+                        {{ form_comment.rate.label_tag }}
+                        {{ form_comment.rate }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_comment.text.label_tag }}
+                        {{ form_comment.text }}
+                    </div>
+                    <button type="submit" class="comment-button save-button">Сохранить</button>
+                    <button type="button" id="cancel-edit-comment-btn" class="comment-button cancel-button">Отменить изменения</button>
+                </form>
             </div>
-            <button type="submit" class="comment-button">Оставить комментарий</button>
-        </form>
-    </div>
+        {% else %}
+            <p>Вы можете добавить комментарий:</p>
+            <div class="comment-form-container">
+                <form method="post" class="comment-form">
+                    {% csrf_token %}
+                    <div>
+                        {{ form_comment.rate.label_tag }}
+                        {{ form_comment.rate }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_comment.text.label_tag }}
+                        {{ form_comment.text }}
+                    </div>
+                    <button type="submit" class="comment-button">Оставить комментарий</button>
+                </form>
+            </div>
+        {% endif %}
     {% else %}
     <p class="not-authenticated">Войдите в аккаунт, чтобы оставить комментарий.</p>
     {% endif %}
@@ -80,31 +131,10 @@
 
 {% block script %}
 <script>
-    document.getElementById("like-btn").addEventListener("click", function() {
-    fetch("", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "like=1"
-    })
-    .then(response => response.json())
-    .then(data => {
-        let btn = document.getElementById("like-btn");
-        let text = document.getElementById("like-text");
-        let count = document.getElementById("likes-count");
-
-        if (data.liked) {
-            text.innerHTML = "💖 Лайкнуто";
-        } else {
-            text.innerHTML = "🤍 Лайк";
-        }
-        count.innerHTML = data.likes_count;
-    });
-});
-
-    document.querySelectorAll('.product-slider').forEach(slider => {
+// Инициализация слайдера независимо от наличия комментариев
+document.addEventListener("DOMContentLoaded", function() {
+    const slider = document.querySelector('.product-slider');
+    if (slider) {
         let currentIndex = 0;
         const items = slider.querySelectorAll('.slider-item');
 
@@ -132,7 +162,46 @@
 
         slider.appendChild(prevButton);
         slider.appendChild(nextButton);
+    }
+});
+
+// Остальной JavaScript-код (для лайков, редактирования комментариев и т.д.)
+document.getElementById("like-btn").addEventListener("click", function() {
+    fetch("", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "like=1"
+    })
+    .then(response => response.json())
+    .then(data => {
+        let btn = document.getElementById("like-btn");
+        let text = document.getElementById("like-text");
+        let count = document.getElementById("likes-count");
+
+        if (data.liked) {
+            text.innerHTML = "💖 Лайкнуто";
+        } else {
+            text.innerHTML = "🤍 Лайк";
+        }
+        count.innerHTML = data.likes_count;
     });
+});
+
+document.getElementById("edit-comment-btn").addEventListener("click", function() {
+    document.querySelector('.comment-form-container').style.display = 'none';
+    document.getElementById('edit-comment-form-container').style.display = 'block';
+    document.querySelector('[name="rate"]').value = "{{ comment.rate }}";
+    document.querySelector('[name="text"]').value = "{{ comment.text }}";
+    document.getElementById("edit-comment-btn").style.display = 'none';
+});
+
+document.getElementById("cancel-edit-comment-btn").addEventListener("click", function() {
+    document.querySelector('.comment-form-container').style.display = 'block';
+    document.getElementById('edit-comment-form-container').style.display = 'none';
+    document.getElementById("edit-comment-btn").style.display = 'inline-block';
+});
 </script>
 {% endblock %}
-

@@ -253,3 +253,65 @@
   color: #999;
   text-align: right;
 }
+
+/* Новый текст для комментариев */
+.comments-container p.comment-status {
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Добавляем отступ между кнопками "сохранить" и "отменить изменения" */
+.comment-form-container button {
+  margin-bottom: 10px;
+}
+
+/* Изменение шрифта и размера кнопок "сохранить" и "отменить изменения" */
+.comment-button {
+  font-size: 1.2em;
+  padding: 12px 18px;
+}
+
+/* Стили для кнопки "Изменить комментарий", когда она скрыта */
+#edit-comment-btn.hidden {
+  display: none;
+}
+
+/* Стили для отображения формы редактирования */
+#edit-comment-form-container {
+  margin-top: 20px;
+}
+
+/* Убираем кнопки при редактировании */
+.comment-form-container button.hidden {
+  display: none;
+}
+
+/* Отображение кнопки "Изменить комментарий" для уже оставленного комментария */
+#edit-comment-btn {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Стили для слайдера (при необходимости) */
+.product-slider {
+  margin-bottom: 20px; /* Увеличиваем отступ между слайдером и описанием товара */
+}
+
+/* Контейнер для кнопок */
+.comment-buttons {
+    display: flex;
+    gap: 10px; /* Отступ между кнопками */
+    margin-top: 10px;
+}
+
+.delete-button {
+    background-color: #ff4444;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+    transform: scale(1.05); /* Увеличение при наведении */
+}

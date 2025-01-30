@@ -31,8 +31,17 @@ class CreateProductForm(forms.ModelForm):
 
 
 class CreateCommentForm(forms.ModelForm):
-    rate = forms.ChoiceField(choices=[(i, str(i)) for i in range(1, 6)], label='Оценка', required=True)
-    text = forms.CharField(widget=forms.Textarea, label='Комментарий', required=False)
+    rate = forms.ChoiceField(
+        choices=[(i, str(i)) for i in range(1, 6)],
+        label='Оценка',
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-input'})  # Добавляем класс для Select
+    )
+    text = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-input'}),  # Добавляем класс для Textarea
+        label='Комментарий',
+        required=False
+    )
 
     class Meta:
         model = Comment

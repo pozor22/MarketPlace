@@ -1,3 +1,6 @@
+from itertools import product
+from lib2to3.fixes.fix_input import context
+
 from django.db.transaction import commit
 from django.shortcuts import redirect
 from django.template.defaulttags import comment
@@ -7,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 
-from .models import Product, ProductImage, Like
+from .models import Product, ProductImage, Like, Comment
 from .forms import CreateProductForm, CreateCommentForm
 
 
@@ -40,9 +43,14 @@ class ProductDetail(DetailView):
         for comment in comments:
             comment.formatted_date = localtime(comment.created_at).strftime("%d.%m.%Y %H:%M")
 
+        is_comment = self.object.comments.filter(author=self.request.user).exists() if self.request.user.is_authenticated else False
+        if is_comment:
+            context['comment'] = self.object.comments.get(author=self.request.user, product=self.get_object())
+
         context['title'] = self.object.name
         context['form_comment'] = form_comment
         context['comments'] = comments
+        context['is_comment'] = is_comment
         context['ratings_count'] = self.object.get_ratings()
         context['is_liked'] = self.object.is_liked_by(self.request.user) if self.request.user.is_authenticated else False
         context['likes_count'] = self.object.likes.count()
@@ -53,15 +61,33 @@ class ProductDetail(DetailView):
         if "like" in request.POST:
             return self.like_product(request)
 
+        if "delete" in request.POST:
+            try:
+                comment = Comment.objects.get(author=request.user, product=self.get_object())
+                comment.delete()
+            except Comment.DoesNotExist:
+                pass
+
+            return self.get(request, *args, **kwargs)
+
         product = self.get_object()
         form = CreateCommentForm(request.POST)
 
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.product = product
-            comment.author = request.user
-            comment.rate = form.cleaned_data['rate']
-            comment.save()
+            # Проверяем, существует ли уже комментарий от текущего пользователя
+            user_comment = product.comments.filter(author=request.user, product=self.get_object()).first()
+
+            if user_comment:
+                # Если комментарий уже существует, обновляем его
+                user_comment.rate = form.cleaned_data['rate']
+                user_comment.text = form.cleaned_data['text']
+                user_comment.save()
+            else:
+                # Если комментария нет, создаем новый
+                comment = form.save(commit=False)
+                comment.product = product
+                comment.author = request.user
+                comment.save()
 
             return redirect('product_detail', pk=product.pk)
 
