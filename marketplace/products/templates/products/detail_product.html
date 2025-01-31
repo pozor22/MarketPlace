@@ -1,10 +1,10 @@
-{% extends 'products/base.html' %}
+{% extends 'users/base.html' %}
 
 {% block title %} {{ title }} {% endblock %}
 
 {% block style %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'products/DetailProduct.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'products/detail_product.css' %}">
 {% endblock %}
 
 {% block main %}
@@ -64,6 +64,13 @@
             {% endif %}
         </p>
         <p class="product-author">Автор: {{ product.author.username }}</p>
+        <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="add_to_basket" value="{{ product.id }}">
+                <button type="submit" class="add-to-basket-button" onclick="return confirm('Добавить в корзину?')">
+                    Добавить в корзину
+                </button>
+        </form>
         <a href="{% url 'home' %}" class="back-link">Вернуться к товарам</a>
     </div>
 </div>
@@ -97,8 +104,19 @@
                 <form method="post" class="comment-form">
                     {% csrf_token %}
                     <div>
-                        {{ form_comment.rate.label_tag }}
-                        {{ form_comment.rate }}
+                        <p>Оценка:</p>
+                        <div class="rating">
+                            <input type="radio" id="edit-star5" name="rate" value="5">
+                            <label for="edit-star5">&#9733;</label>
+                            <input type="radio" id="edit-star4" name="rate" value="4">
+                            <label for="edit-star4">&#9733;</label>
+                            <input type="radio" id="edit-star3" name="rate" value="3">
+                            <label for="edit-star3">&#9733;</label>
+                            <input type="radio" id="edit-star2" name="rate" value="2">
+                            <label for="edit-star2">&#9733;</label>
+                            <input type="radio" id="edit-star1" name="rate" value="1">
+                            <label for="edit-star1">&#9733;</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {{ form_comment.text.label_tag }}
@@ -114,8 +132,19 @@
                 <form method="post" class="comment-form">
                     {% csrf_token %}
                     <div>
-                        {{ form_comment.rate.label_tag }}
-                        {{ form_comment.rate }}
+                        <p>Оценка:</p>
+                        <div class="rating">
+                            <input type="radio" id="star5" name="rate" value="5">
+                            <label for="star5">&#9733;</label>
+                            <input type="radio" id="star4" name="rate" value="4">
+                            <label for="star4">&#9733;</label>
+                            <input type="radio" id="star3" name="rate" value="3">
+                            <label for="star3">&#9733;</label>
+                            <input type="radio" id="star2" name="rate" value="2">
+                            <label for="star2">&#9733;</label>
+                            <input type="radio" id="star1" name="rate" value="1">
+                            <label for="star1">&#9733;</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {{ form_comment.text.label_tag }}
@@ -145,78 +174,6 @@
 {% endblock %}
 
 {% block script %}
-<script>
-// Инициализация слайдера независимо от наличия комментариев
-document.addEventListener("DOMContentLoaded", function() {
-    const slider = document.querySelector('.product-slider');
-    if (slider) {
-        let currentIndex = 0;
-        const items = slider.querySelectorAll('.slider-item');
-
-        function showSlide(index) {
-            items.forEach((item, i) => {
-                item.style.display = i === index ? 'block' : 'none';
-            });
-        }
-
-        showSlide(currentIndex);
-
-        const nextButton = document.createElement('button');
-        nextButton.innerText = 'Вперед';
-        nextButton.onclick = () => {
-            currentIndex = (currentIndex + 1) % items.length;
-            showSlide(currentIndex);
-        };
-
-        const prevButton = document.createElement('button');
-        prevButton.innerText = 'Назад';
-        prevButton.onclick = () => {
-            currentIndex = (currentIndex - 1 + items.length) % items.length;
-            showSlide(currentIndex);
-        };
-
-        slider.appendChild(prevButton);
-        slider.appendChild(nextButton);
-    }
-});
-
-// Остальной JavaScript-код (для лайков, редактирования комментариев и т.д.)
-document.getElementById("like-btn").addEventListener("click", function() {
-    fetch("", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "like=1"
-    })
-    .then(response => response.json())
-    .then(data => {
-        let btn = document.getElementById("like-btn");
-        let text = document.getElementById("like-text");
-        let count = document.getElementById("likes-count");
-
-        if (data.liked) {
-            text.innerHTML = "💖 Лайкнуто";
-        } else {
-            text.innerHTML = "🤍 Лайк";
-        }
-        count.innerHTML = data.likes_count;
-    });
-});
-
-document.getElementById("edit-comment-btn").addEventListener("click", function() {
-    document.querySelector('.comment-form-container').style.display = 'none';
-    document.getElementById('edit-comment-form-container').style.display = 'block';
-    document.querySelector('[name="rate"]').value = "{{ comment.rate }}";
-    document.querySelector('[name="text"]').value = "{{ comment.text }}";
-    document.getElementById("edit-comment-btn").style.display = 'none';
-});
-
-document.getElementById("cancel-edit-comment-btn").addEventListener("click", function() {
-    document.querySelector('.comment-form-container').style.display = 'block';
-    document.getElementById('edit-comment-form-container').style.display = 'none';
-    document.getElementById("edit-comment-btn").style.display = 'inline-block';
-});
-</script>
+{% load static %}
+<script src="{% static 'products/js/detail_product.js' %}"></script>
 {% endblock %}

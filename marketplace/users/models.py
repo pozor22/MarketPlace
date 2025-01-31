@@ -73,3 +73,16 @@ class PasswordChangeConfirmation(models.Model):
         from datetime import timedelta
         from django.utils.timezone import now
         return now() - self.created_at <= timedelta(minutes=10)
+
+
+class Basket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='basket')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='basket')
+    count = models.PositiveIntegerField(default=1)
+    created_timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.product.name} - {self.count}'
+
+    def get_total_price(self):
+        return self.product.total_price * self.count

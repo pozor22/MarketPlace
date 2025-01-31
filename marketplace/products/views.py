@@ -8,12 +8,20 @@ from django.http import JsonResponse
 from .models import Product, ProductImage, Like, Comment
 from .forms import CreateProductForm, CreateCommentForm, UpdateProductForm
 from .mixins import SellerRequiredMixin, NotAuthenticatedRequiredMixin
+from users.models import Basket
 
 
 class HomeProducts(ListView):
     template_name = 'products/home.html'
     context_object_name = 'products'
     paginate_by = 20
+
+    def post(self, request):
+        if "add_to_basket" in request.POST:
+            product_id = request.POST.get('add_to_basket')
+            product = Product.objects.get(id=product_id)
+            Basket.objects.get_or_create(user=request.user, product=product)
+            return self.get(request)
 
     def get_queryset(self):
         return Product.objects.prefetch_related('images').all()
@@ -28,6 +36,13 @@ class ProductsUserLiked(NotAuthenticatedRequiredMixin, ListView):
     template_name = 'products/products_liked.html'
     context_object_name = 'products'
     paginate_by = 20
+
+    def post(self, request):
+        if "add_to_basket" in request.POST:
+            product_id = request.POST.get('add_to_basket')
+            product = Product.objects.get(id=product_id)
+            Basket.objects.get_or_create(user=request.user, product=product)
+            return self.get(request)
 
     def get_queryset(self):
         return Product.objects.prefetch_related('images').filter(likes__user=self.request.user)
@@ -56,6 +71,7 @@ class ProductDetail(DetailView):
         is_comment = self.object.comments.filter(author=self.request.user).exists() if self.request.user.is_authenticated else False
         if is_comment:
             context['comment'] = self.object.comments.get(author=self.request.user, product=self.get_object())
+            form_comment = CreateCommentForm(initial={'text': context['comment'].text})
 
         context['title'] = self.object.name
         context['form_comment'] = form_comment
@@ -79,16 +95,22 @@ class ProductDetail(DetailView):
 
             return self.get(request, *args, **kwargs)
 
+        if "add_to_basket" in request.POST:
+            product_id = request.POST.get('add_to_basket')
+            product = Product.objects.get(id=product_id)
+            Basket.objects.get_or_create(user=request.user, product=product)
+            return self.get(request, *args, **kwargs)
+
         product = self.get_object()
         form = CreateCommentForm(request.POST)
-
+        print(request.POST)
         if form.is_valid():
             # Проверяем, существует ли уже комментарий от текущего пользователя
             user_comment = product.comments.filter(author=request.user, product=self.get_object()).first()
 
             if user_comment:
                 # Если комментарий уже существует, обновляем его
-                user_comment.rate = form.cleaned_data['rate']
+                user_comment.rate = request.POST.get('rate')
                 user_comment.text = form.cleaned_data['text']
                 user_comment.save()
             else:
@@ -96,6 +118,7 @@ class ProductDetail(DetailView):
                 comment = form.save(commit=False)
                 comment.product = product
                 comment.author = request.user
+                comment.rate = request.POST.get('rate')
                 comment.save()
 
             return redirect('product_detail', pk=product.pk)
@@ -161,6 +184,11 @@ class ProductDetailSeller(SellerRequiredMixin, DetailView):
             image = ProductImage.objects.get(id=image_id)
             image.delete()
             return self.get(request)
+
+        if "delete_product" in request.POST:
+            product = self.get_object()
+            product.delete()
+            return redirect('profile_seller')
 
         form = UpdateProductForm(request.POST, request.FILES)
         print(request.POST)

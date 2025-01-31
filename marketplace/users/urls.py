@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     # Profile
     path('profile/', views.Profile.as_view(), name='profile'),
+    path('my_basket/', views.ProductsUserBasket.as_view(), name='my_basket'),
 
     # Registration and login
     path('registration/', views.CreateUserView.as_view(), name='registration'),

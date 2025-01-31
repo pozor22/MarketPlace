@@ -110,14 +110,14 @@ h1 {
 /* Стили для слайдера */
 .product-slider {
   position: relative;
-  width: 100%;
-  max-width: 300px;
+  width: 100%; /* Занимает всю ширину карточки */
   overflow: hidden;
   border: 1px solid #ddd; /* Рамка слайдера */
   border-radius: 8px; /* Скругление углов */
   background-color: #fff; /* Белый фон */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
   margin-bottom: 15px; /* Отступ от описания */
+  box-sizing: border-box; /* Учитываем padding и border в ширине */
 }
 
 /* Элементы слайдера */
@@ -127,7 +127,7 @@ h1 {
 }
 
 .slider-item img {
-  width: 100%;
+  width: 100%; /* Изображение занимает всю ширину слайдера */
   height: 200px; /* Фиксированная высота */
   object-fit: cover; /* Обрезка изображения */
   border-radius: 8px; /* Скругление углов */
@@ -151,6 +151,7 @@ h1 {
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Тень */
   transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 1; /* Чтобы кнопки были поверх изображений */
 }
 
 .product-slider button:hover {
@@ -194,4 +195,52 @@ h1 {
 .product-card-link h3,
 .product-card-link p {
   text-decoration: none; /* Убираем подчеркивание для текста внутри ссылки */
+}
+
+/* Стили для контейнера с заголовком и кнопкой */
+.header-with-button {
+    display: flex;
+    justify-content: center; /* Центрируем заголовок */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    position: relative; /* Для позиционирования кнопки */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+/* Стили для заголовка "Мои товары" */
+.centered-title {
+    text-align: center; /* Центрируем текст */
+    flex-grow: 1; /* Заголовок занимает все доступное пространство */
+}
+
+/* Стили для кнопки "Добавить товар" */
+.add-product-button {
+    background-color: #800080; /* Фиолетовый фон */
+    color: #fff; /* Белый текст */
+    padding: 8px 16px; /* Отступы внутри кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 14px; /* Размер текста */
+    text-decoration: none; /* Убираем подчеркивание */
+    cursor: pointer; /* Курсор в виде указателя */
+    transition: background-color 0.3s ease; /* Плавный переход для фона */
+    position: absolute; /* Абсолютное позиционирование */
+    right: 0; /* Кнопка прижимается к правому краю */
+}
+
+/* Эффект при наведении */
+.add-product-button:hover {
+    background-color: #7f34b5; /* Темно-фиолетовый при наведении */
+}
+
+/* Эффект при нажатии */
+.add-product-button:active {
+    background-color: #6a1b9a; /* Еще темнее фиолетовый при нажатии */
+}
+
+/* Контейнер для заголовка и кнопки */
+.header-with-button {
+    display: flex;
+    justify-content: space-between; /* Распределение пространства между элементами */
+    align-items: center; /* Выравнивание по вертикали */
+    margin-bottom: 20px; /* Отступ снизу */
 }

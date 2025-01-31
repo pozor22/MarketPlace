@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, View, TemplateView
+from django.views.generic import CreateView, View, TemplateView, ListView
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -11,8 +11,10 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from .forms import CreateUserForm, ChangePasswordForm, ConfirmPasswordChangeForm, UpdateToSellerUserForm
 from .tasks import send_email_active_account, send_email_code
-from .models import User, PasswordChangeConfirmation
+from .models import User, PasswordChangeConfirmation, Basket
 from .mixins import UserIsNotAuthenticated
+from products.models import Product
+from products.mixins import NotAuthenticatedRequiredMixin
 
 
 class CreateUserView(UserIsNotAuthenticated, CreateView):
@@ -68,6 +70,20 @@ class Profile(LoginRequiredMixin, View):
             'group': request.user.groups.first().name
         }
         return render(request, 'users/profile.html', context=context)
+
+
+class ProductsUserBasket(NotAuthenticatedRequiredMixin, ListView):
+    template_name = 'users/products_in_basket.html'
+    context_object_name = 'products'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Product.objects.prefetch_related('images').filter(basket__user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'MyBasket'
+        return context
 
 
 class UpdateToSellerView(LoginRequiredMixin, View):

@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'userscss/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'users/base.css' %}">
     {% block style %} {% endblock %}
 </head>
 <body>
     <header>
         <div class="logo">
-            <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">VovaShop</a>
+            <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">VovaWB</a>
         </div>
         <div class="search-container">
             <form method="get" action="{% url 'login' %}" class="search-form">

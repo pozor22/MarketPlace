@@ -1,4 +1,4 @@
-{% extends 'products/base.html' %}
+{% extends 'users/base.html' %}
 
 {% block title %} {{ title }} {% endblock %}
 
@@ -9,7 +9,10 @@
 
 {% block main %}
 <div class="products-container">
-    <h1>Мои товары</h1>
+    <div class="header-with-button">
+        <h1 class="centered-title">Мои товары</h1>
+        <a href="{% url 'create_product' %}" class="add-product-button">Добавить товар</a>
+    </div>
     <div class="products-list">
       {% for product in products %}
         <div class="product-card">
@@ -76,38 +79,6 @@
 {% endblock %}
 
 {% block script %}
-<!-- Подключение слайдера -->
-  <script>
-    // Пример простого слайдера на чистом JS
-    document.querySelectorAll('.product-slider').forEach(slider => {
-      let currentIndex = 0;
-      const items = slider.querySelectorAll('.slider-item');
-
-      function showSlide(index) {
-        items.forEach((item, i) => {
-          item.style.display = i === index ? 'block' : 'none';
-        });
-      }
-
-      showSlide(currentIndex);
-
-      // Добавьте кнопки для управления (вперед/назад)
-      const nextButton = document.createElement('button');
-      nextButton.innerText = 'Вперед';
-      nextButton.onclick = () => {
-        currentIndex = (currentIndex + 1) % items.length;
-        showSlide(currentIndex);
-      };
-
-      const prevButton = document.createElement('button');
-      prevButton.innerText = 'Назад';
-      prevButton.onclick = () => {
-        currentIndex = (currentIndex - 1 + items.length) % items.length;
-        showSlide(currentIndex);
-      };
-
-      slider.appendChild(prevButton);
-      slider.appendChild(nextButton);
-    });
-  </script>
+{% load static %}
+<script src="{% static 'products/js/slider.js' %}"></script>
 {% endblock %}

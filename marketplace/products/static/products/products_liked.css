@@ -110,14 +110,14 @@ h1 {
 /* Стили для слайдера */
 .product-slider {
   position: relative;
-  width: 100%;
-  max-width: 300px;
+  width: 100%; /* Занимает всю ширину карточки */
   overflow: hidden;
   border: 1px solid #ddd; /* Рамка слайдера */
   border-radius: 8px; /* Скругление углов */
   background-color: #fff; /* Белый фон */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
   margin-bottom: 15px; /* Отступ от описания */
+  box-sizing: border-box; /* Учитываем padding и border в ширине */
 }
 
 /* Элементы слайдера */
@@ -127,7 +127,7 @@ h1 {
 }
 
 .slider-item img {
-  width: 100%;
+  width: 100%; /* Изображение занимает всю ширину слайдера */
   height: 200px; /* Фиксированная высота */
   object-fit: cover; /* Обрезка изображения */
   border-radius: 8px; /* Скругление углов */
@@ -151,6 +151,7 @@ h1 {
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Тень */
   transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 1; /* Чтобы кнопки были поверх изображений */
 }
 
 .product-slider button:hover {
@@ -194,4 +195,40 @@ h1 {
 .product-card-link h3,
 .product-card-link p {
   text-decoration: none; /* Убираем подчеркивание для текста внутри ссылки */
+}
+
+/* Стили для кнопки "Добавить в корзину" */
+.add-to-basket-button {
+    background-color: #800080; /* Фиолетовый фон */
+    color: #fff; /* Белый текст */
+    padding: 10px 16px; /* Отступы внутри кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Скругление углов */
+    font-size: 14px; /* Размер текста */
+    font-weight: bold; /* Жирный текст */
+    text-decoration: none; /* Убираем подчеркивание */
+    cursor: pointer; /* Курсор в виде указателя */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
+    display: block; /* Кнопка занимает всю ширину */
+    width: 100%; /* Ширина 100% */
+    text-align: center; /* Выравнивание текста по центру */
+    margin-top: 10px; /* Отступ сверху */
+    box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Эффект при наведении */
+.add-to-basket-button:hover {
+    background-color: #7f34b5; /* Темно-фиолетовый при наведении */
+    transform: scale(1.02); /* Легкое увеличение кнопки */
+}
+
+/* Эффект при нажатии */
+.add-to-basket-button:active {
+    background-color: #6a1b9a; /* Еще темнее фиолетовый при нажатии */
+    transform: scale(0.98); /* Легкое уменьшение кнопки */
+}
+
+/* Иконка (опционально) */
+.add-to-basket-button i {
+    margin-right: 8px; /* Отступ между иконкой и текстом */
 }
