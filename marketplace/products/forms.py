@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .models import Product, Category, Comment
 
@@ -46,3 +47,27 @@ class CreateCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['rate', 'text']
+
+
+class UpdateProductForm(forms.ModelForm):
+    images = MultipleFileField(label="Добавь новые фотографии", required=False)
+
+    name = forms.CharField(label="Название")
+    description = forms.CharField(label="Описание", widget=forms.Textarea)
+    price = forms.IntegerField(label="Цена")
+    total_price = forms.IntegerField(label="Итоговая цена",
+                                     widget=forms.NumberInput(attrs={'readonly': 'readonly'}),
+                                     required=False)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), label="Категория")
+    discount = forms.IntegerField(
+        label="Скидка (%)",
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        widget=forms.NumberInput(attrs={'min': 0, 'max': 100})
+    )
+    is_available = forms.BooleanField(label="Если ли в наличии")
+
+    class Meta:
+        model = Product
+        fields = ['name', 'description',
+                  'price', 'category',
+                  'total_price', 'discount', 'is_available']

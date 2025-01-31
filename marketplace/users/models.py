@@ -38,6 +38,9 @@ class User(AbstractUser):
         verbose_name="Номер телефона"
     )
 
+    def is_seller(self):
+        return self.groups.filter(name='seller').exists()
+
     def get_image_base64(self):
         """Возвращает изображение в формате base64 для использования в шаблоне"""
         if self.avatar:

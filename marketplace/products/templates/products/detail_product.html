@@ -51,7 +51,18 @@
         <h1>{{ product.name }}</h1>
         <p class="product-description">{{ product.description }}</p>
         <p class="product-category">Категория: {{ product.category.name }}</p>
-        <p class="product-price">Цена: {{ product.price }}₽</p>
+        <!-- Отображение цены с учетом скидки -->
+        <p class="product-price">
+            {% if product.discount > 0 %}
+                <!-- Если скидка есть, показываем зачеркнутую цену, итоговую цену и скидку -->
+                <span style="text-decoration: line-through; color: #999;">{{ product.price }}₽</span>
+                <span style="color: #ff6600; font-weight: bold;">{{ product.total_price }}₽</span>
+                <span style="color: green; font-weight: bold;">({{ product.discount }}% скидка)</span>
+            {% else %}
+                <!-- Если скидки нет, показываем обычную цену -->
+                <span style="color: #ff6600; font-weight: bold;">{{ product.price }}₽</span>
+            {% endif %}
+        </p>
         <p class="product-author">Автор: {{ product.author.username }}</p>
         <a href="{% url 'home' %}" class="back-link">Вернуться к товарам</a>
     </div>

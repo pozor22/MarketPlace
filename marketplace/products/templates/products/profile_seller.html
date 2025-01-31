@@ -4,12 +4,12 @@
 
 {% block style %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'products/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'products/profile_seller.css' %}">
 {% endblock %}
 
 {% block main %}
 <div class="products-container">
-    <h1>Наши товары</h1>
+    <h1>Мои товары</h1>
     <div class="products-list">
       {% for product in products %}
         <div class="product-card">
@@ -29,7 +29,7 @@
               </div>
             {% endfor %}
           </div>
-          <a href="{% url 'product_detail' product.id %}" class="product-card-link">
+          <a href="{% url 'detail_product_seller' product.id %}" class="product-card-link">
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
           <p>Категория: {{ product.category.name }}</p>

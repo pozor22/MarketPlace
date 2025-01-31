@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 
 from .models import Product, ProductImage, Like, Comment
-from .forms import CreateProductForm, CreateCommentForm
+from .forms import CreateProductForm, CreateCommentForm, UpdateProductForm
 from .mixins import SellerRequiredMixin, NotAuthenticatedRequiredMixin
 
 
@@ -116,6 +116,75 @@ class ProductDetail(DetailView):
             "liked": liked,
             "likes_count": product.likes.count()
         })
+
+
+class ProfileSeller(SellerRequiredMixin, ListView):
+    template_name = 'products/profile_seller.html'
+    context_object_name = 'products'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Product.objects.prefetch_related('images').filter(author=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'ProfileSeller'
+        return context
+
+
+class ProductDetailSeller(SellerRequiredMixin, DetailView):
+    template_name = 'products/detail_product_seller.html'
+    model = Product
+    context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        form = UpdateProductForm(initial={
+            'name': self.object.name,
+            'description': self.object.description,
+            'price': self.object.price,
+            'category': self.object.category,
+            'total_price': self.object.total_price,
+            'discount': self.object.discount,
+            'is_available': self.object.is_available
+        })
+
+        context['title'] = 'Товар'
+        context['form'] = form
+        return context
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        if "delete_image" in request.POST:
+            image_id = request.POST.get('delete_image')
+            image = ProductImage.objects.get(id=image_id)
+            image.delete()
+            return self.get(request)
+
+        form = UpdateProductForm(request.POST, request.FILES)
+        print(request.POST)
+        print(form.errors)
+        if form.is_valid():
+            product = self.get_object()
+            product.name = form.cleaned_data['name']
+            product.description = form.cleaned_data['description']
+            product.price = form.cleaned_data['price']
+            product.category = form.cleaned_data['category']
+            product.discount = form.cleaned_data['discount']
+            product.is_available = form.cleaned_data['is_available']
+            product.save()
+
+            images = request.FILES.getlist('images')
+            for image in images:
+                 ProductImage.objects.create(
+                    product=product,
+                    image=image.read()
+                )
+
+            return self.get(request)
+
+        return self.get(request)
 
 
 class CreateProductView(SellerRequiredMixin, CreateView):

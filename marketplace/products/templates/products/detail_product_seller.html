@@ -1,0 +1,314 @@
+{% extends 'products/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'products/detail_product_seller.css' %}">
+{% endblock %}
+
+{% block main %}
+<div style="text-align: center;">
+    <h1>Ваш товар: {{ product.name }}</h1>
+</div>
+
+<!-- Блок с информацией о товаре -->
+<div class="product-detail-container" id="product-detail-container">
+    <div class="product-detail-image">
+        <!-- Проверка на количество фотографий -->
+        {% if product.images.count > 1 %}
+            <!-- Слайдер для фотографий товара -->
+            <div class="product-slider">
+                {% for image in product.images.all %}
+                    <div class="slider-item">
+                        <img
+                            src="data:image/png;base64,{{ image.get_image_base64 }}"
+                            alt="{{ product.name }} image {{ forloop.counter }}"
+                        >
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Если фотография одна, отображаем её без слайдера -->
+            {% if product.images.first %}
+                <img
+                    src="data:image/png;base64,{{ product.images.first.get_image_base64 }}"
+                    alt="{{ product.name }} image"
+                    class="single-image"
+                >
+            {% else %}
+                <p>Нет фотографий для этого товара.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Остальная часть вашего шаблона -->
+    <div class="product-detail-info">
+        {% if product.get_ratings %}
+            <p> Оценка {{ product.get_ratings|floatformat:1 }} / 5</p>
+        {% else %}
+            <p> Нет оценок</p>
+        {% endif %}
+        <h1>{{ product.name }}</h1>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="product-category">Категория: {{ product.category.name }}</p>
+
+        <!-- Отображение цены с учетом скидки -->
+        <p class="product-price">
+            {% if product.discount > 0 %}
+                <!-- Если скидка есть, показываем зачеркнутую цену, итоговую цену и скидку -->
+                <span style="text-decoration: line-through; color: #999;">{{ product.price }}₽</span>
+                <span style="color: #ff6600; font-weight: bold;">{{ product.total_price }}₽</span>
+                <span style="color: green; font-weight: bold;">({{ product.discount }}% скидка)</span>
+            {% else %}
+                <!-- Если скидки нет, показываем обычную цену -->
+                <span style="color: #ff6600; font-weight: bold;">{{ product.price }}₽</span>
+            {% endif %}
+        </p>
+
+        <p class="product-author">Автор: {{ product.author.username }}</p>
+        <!-- Кнопка для показа формы редактирования -->
+        <button onclick="toggleEditForm()" class="back-link">Редактировать товар</button>
+    </div>
+</div>
+
+<!-- Форма для изменения товара (изначально скрыта) -->
+<div class="create-container" id="create-container" style="display: none;">
+    <h2>Редактирование товара</h2>
+
+    <!-- Отображение всех фотографий товара -->
+    <div class="existing-images">
+        <h3>Загруженные фотографии:</h3>
+        {% for image in product.images.all %}
+            <div class="image-item">
+                <img src="data:image/png;base64,{{ image.get_image_base64 }}" alt="Изображение товара" style="max-width: 150px;">
+                <!-- Форма для удаления фотографии -->
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete_image" value="{{ image.id }}">
+                    <button type="submit"
+                            onclick="return confirm('Удалить фотографию?')"
+                            class="comment-button delete-button">
+                        Удалить
+                    </button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Форма для изменения товара -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Блок для отображения ошибок формы -->
+        {% if form.non_field_errors %}
+        <div class="form-errors">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Поле для загрузки изображений -->
+        <div class="form-group">
+            {{ form.images.label_tag }}
+            <div class="file-upload-container">
+                {{ form.images }}
+            </div>
+            {% if form.images.errors %}
+            <div class="field-error">
+                {{ form.images.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для названия товара -->
+        <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            {% if form.name.errors %}
+            <div class="field-error">
+                {{ form.name.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для описания товара -->
+        <div class="form-group">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="field-error">
+                {{ form.description.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для выбора категории -->
+        <div class="form-group">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+            {% if form.category.errors %}
+            <div class="field-error">
+                {{ form.category.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для цены товара -->
+        <div class="form-group">
+            {{ form.price.label_tag }}
+            {{ form.price }}
+            {% if form.price.errors %}
+            <div class="field-error">
+                {{ form.price.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для скидки -->
+        <div class="form-group">
+            {{ form.discount.label_tag }}
+            {{ form.discount }}
+            {% if form.discount.errors %}
+            <div class="field-error">
+                {{ form.discount.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле для итоговой цены товара -->
+        <div class="form-group">
+            {{ form.total_price.label_tag }}
+            {{ form.total_price }}
+            {% if form.total_price.errors %}
+            <div class="field-error">
+                {{ form.total_price.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Поле есть ли в наличии -->
+        <div class="form-group">
+            {{ form.is_available.label_tag }}
+            {{ form.is_available }}
+            {% if form.is_available.errors %}
+            <div class="field-error">
+                {{ form.is_available.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Кнопка отправки формы -->
+        <button type="submit" class="btn-submit">Сохранить изменения</button>
+
+        <!-- Кнопка "Отменить изменения" -->
+        <button type="button" onclick="toggleEditForm()" class="btn-cancel">Отменить изменения</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+// Функция для расчета итоговой цены
+function calculateTotalPrice() {
+    const priceInput = document.querySelector('#id_price');  // ID поля "Цена"
+    const discountInput = document.querySelector('#id_discount');  // ID поля "Скидка"
+    const totalPriceInput = document.querySelector('#id_total_price');  // ID поля "Итоговая цена"
+
+    // Получаем значения цены и скидки
+    const price = parseFloat(priceInput.value) || 0;
+    const discount = parseFloat(discountInput.value) || 0;
+
+    // Рассчитываем итоговую цену
+    let totalPrice = price;
+    if (discount > 0) {
+        totalPrice = price - (price * discount / 100);
+    }
+
+    // Округляем до целого числа
+    totalPriceInput.value = Math.round(totalPrice);
+}
+
+// Добавляем обработчики событий для полей "Цена" и "Скидка"
+document.addEventListener('DOMContentLoaded', function() {
+    const priceInput = document.querySelector('#id_price');
+    const discountInput = document.querySelector('#id_discount');
+
+    if (priceInput && discountInput) {
+        priceInput.addEventListener('input', calculateTotalPrice);
+        discountInput.addEventListener('input', calculateTotalPrice);
+    }
+
+    // Инициализируем расчет итоговой цены при загрузке страницы
+    calculateTotalPrice();
+});
+
+
+// Инициализация слайдера
+function initSlider() {
+    const slider = document.querySelector('.product-slider');
+    if (slider) {
+        let currentIndex = 0;
+        const items = slider.querySelectorAll('.slider-item');
+
+        function showSlide(index) {
+            items.forEach((item, i) => {
+                item.style.display = i === index ? 'block' : 'none';
+            });
+        }
+
+        showSlide(currentIndex);
+
+        const nextButton = document.createElement('button');
+        nextButton.innerText = 'Вперед';
+        nextButton.onclick = () => {
+            currentIndex = (currentIndex + 1) % items.length;
+            showSlide(currentIndex);
+        };
+
+        const prevButton = document.createElement('button');
+        prevButton.innerText = 'Назад';
+        prevButton.onclick = () => {
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            showSlide(currentIndex);
+        };
+
+        // Удаляем старые кнопки, если они есть
+        const oldButtons = slider.querySelectorAll('button');
+        oldButtons.forEach(button => button.remove());
+
+        // Добавляем новые кнопки
+        slider.appendChild(prevButton);
+        slider.appendChild(nextButton);
+    }
+}
+
+// Функция для переключения видимости блоков
+function toggleEditForm() {
+    const productDetailContainer = document.getElementById('product-detail-container');
+    const createContainer = document.getElementById('create-container');
+
+    if (productDetailContainer.style.display === 'none') {
+        // Если форма редактирования видна, скрываем её и показываем информацию о товаре
+        productDetailContainer.style.display = 'block';
+        createContainer.style.display = 'none';
+    } else {
+        // Если информация о товаре видна, скрываем её и показываем форму редактирования
+        productDetailContainer.style.display = 'none';
+        createContainer.style.display = 'block';
+    }
+
+    // Инициализируем слайдер при каждом отображении блока с информацией о товаре
+    if (productDetailContainer.style.display === 'block') {
+        initSlider();
+    }
+}
+
+// Инициализация слайдера при загрузке страницы
+document.addEventListener("DOMContentLoaded", function() {
+    initSlider();
+});
+</script>
+{% endblock %}

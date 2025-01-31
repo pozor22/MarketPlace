@@ -1,0 +1,530 @@
+/* detail_product_seller.css */
+
+/* Основной контейнер */
+.product-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 800px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Стили для изображения товара */
+.product-detail-image {
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.product-detail-image img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+/* Стили для текстовой информации */
+.product-detail-info {
+  flex: 2 1 400px;
+  padding: 10px;
+  position: relative;
+}
+
+/* Кнопка лайка */
+.like-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #800080;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.like-btn:hover {
+  background: #7f34b5;
+}
+
+/* Заголовок товара */
+.product-detail-info h1 {
+  color: #333;
+  font-size: 2em;
+  margin-bottom: 15px;
+}
+
+.product-detail-info p {
+  color: #666;
+  font-size: 1em;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.product-detail-info .product-price {
+  color: #ff6600;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.product-detail-info .product-author {
+  color: #777;
+  font-size: 0.9em;
+}
+
+/* Ссылка для возврата */
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #800080;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.back-link:hover {
+  background-color: #7f34b5;
+}
+
+/* Стили для контейнера слайдера */
+.product-slider {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Элементы слайдера */
+.slider-item {
+  width: 100%;
+  text-align: center;
+}
+
+.slider-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Контейнер для кнопок */
+.slider-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Кнопки управления слайдером */
+.product-slider button {
+  background-color: #800080;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-slider button:hover {
+  background-color: #7f34b5;
+}
+
+/* Стили для категории */
+.product-category {
+  color: #007bff;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+
+/* Общий стиль для блока комментариев */
+.comments-container {
+  background-color: #fff;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Заголовок комментариев */
+.comments-container h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Форма комментариев в отдельном блоке */
+.comment-form-container {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-form .form-group {
+  margin-bottom: 10px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+}
+
+.comment-button {
+  background-color: #800080;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.comment-button:hover {
+  background-color: #7f34b5;
+}
+
+/* Список комментариев */
+.comments-list {
+  margin-top: 20px;
+}
+
+/* Блок для каждого комментария */
+.comment {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Автор комментария */
+.comment-author {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Текст комментария */
+.comment-text {
+  color: #666;
+  margin-bottom: 5px;
+}
+
+/* Дата комментария */
+.comment-date {
+  font-size: 0.85em;
+  color: #999;
+  text-align: right;
+}
+
+/* Новый текст для комментариев */
+.comments-container p.comment-status {
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Добавляем отступ между кнопками "сохранить" и "отменить изменения" */
+.comment-form-container button {
+  margin-bottom: 10px;
+}
+
+/* Изменение шрифта и размера кнопок "сохранить" и "отменить изменения" */
+.comment-button {
+  font-size: 1.2em;
+  padding: 12px 18px;
+}
+
+/* Стили для кнопки "Изменить комментарий", когда она скрыта */
+#edit-comment-btn.hidden {
+  display: none;
+}
+
+/* Стили для отображения формы редактирования */
+#edit-comment-form-container {
+  margin-top: 20px;
+}
+
+/* Убираем кнопки при редактировании */
+.comment-form-container button.hidden {
+  display: none;
+}
+
+/* Отображение кнопки "Изменить комментарий" для уже оставленного комментария */
+#edit-comment-btn {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Стили для слайдера (при необходимости) */
+.product-slider {
+  margin-bottom: 20px; /* Увеличиваем отступ между слайдером и описанием товара */
+}
+
+/* Контейнер для кнопок */
+.comment-buttons {
+    display: flex;
+    gap: 10px; /* Отступ между кнопками */
+    margin-top: 10px;
+}
+
+.delete-button {
+    background-color: #ff4444;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+    transform: scale(1.05); /* Увеличение при наведении */
+}
+
+/* Основной контейнер для формы */
+.create-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Стили для формы */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Стили для каждого поля ввода */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Для полей, которые должны быть на половину экрана */
+.form-group .half-width {
+    width: 48%;
+    display: inline-block;
+    margin-right: 4%;
+}
+
+/* Стили для кнопки отправки */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #800080; /* Фиолетовый фон */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #9b4f9b; /* Более светлый фиолетовый при наведении */
+}
+
+/* Стили для загрузки изображения */
+.file-upload-container {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Настройка внешнего вида кнопки выбора файла */
+input[type="file"]::file-selector-button {
+    padding: 10px 15px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #9b4f9b;
+}
+
+/* Дополнительные стили для ошибок */
+.field-error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-errors {
+    color: red;
+    background-color: #f9d6d5;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Стили для поля выбора категории */
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    appearance: none; /* Убирает стандартный вид стрелки в некоторых браузерах */
+    -webkit-appearance: none; /* Для Safari */
+    -moz-appearance: none; /* Для Firefox */
+}
+
+/* Стили для стрелки в поле выбора */
+.select-container {
+    position: relative;
+}
+
+.select-container::after {
+    content: "▼";
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #800080;
+    font-size: 12px;
+}
+
+/* Стили для фокуса на поле выбора */
+select:focus {
+    border-color: #800080;
+    outline: none;
+    box-shadow: 0 0 5px rgba(128, 0, 128, 0.5);
+}
+
+/* Стили для опций в поле выбора */
+select option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Стили для опций при наведении */
+select option:hover {
+    background-color: #800080;
+    color: #fff;
+}
+
+/* Стили для существующих фотографий */
+.existing-images {
+    margin-bottom: 20px;
+}
+
+.image-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.image-item img {
+    max-width: 150px;
+    margin-right: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Стили для кнопки удаления */
+.delete-button {
+    background-color: #ff4444;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
+/* Стили для кнопки "Отменить изменения" */
+.btn-cancel {
+    background-color: #ff4444; /* Красный цвет */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Отступ сверху */
+    width: 100%; /* Ширина кнопки */
+}
+
+.btn-cancel:hover {
+    background-color: #cc0000; /* Темнее при наведении */
+}
