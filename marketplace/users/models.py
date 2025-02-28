@@ -66,7 +66,9 @@ class PasswordChangeConfirmation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def generate_confirmation_code(self):
+        from django.utils.timezone import now
         self.code = f'{random.randint(100000, 999999)}'
+        self.created_at = now()
         self.save()
 
     def is_code_valid(self):

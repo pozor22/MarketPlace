@@ -17,6 +17,9 @@ class HomeProducts(ListView):
     paginate_by = 20
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         if "add_to_basket" in request.POST:
             product_id = request.POST.get('add_to_basket')
             product = Product.objects.get(id=product_id)
@@ -103,7 +106,6 @@ class ProductDetail(DetailView):
 
         product = self.get_object()
         form = CreateCommentForm(request.POST)
-        print(request.POST)
         if form.is_valid():
             # Проверяем, существует ли уже комментарий от текущего пользователя
             user_comment = product.comments.filter(author=request.user, product=self.get_object()).first()
@@ -191,8 +193,6 @@ class ProductDetailSeller(SellerRequiredMixin, DetailView):
             return redirect('profile_seller')
 
         form = UpdateProductForm(request.POST, request.FILES)
-        print(request.POST)
-        print(form.errors)
         if form.is_valid():
             product = self.get_object()
             product.name = form.cleaned_data['name']

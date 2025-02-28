@@ -1,16 +1,44 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:latest
-    container_name: postgres_db
-    restart: always
+  django:
+    container_name: django
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./marketplace:/marketplace
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - database
+
+  celery:
+    build:
+      context: .
+    container_name: celery_marketplace
+    hostname: worker
+    entrypoint: celery
+    working_dir: /marketplace
+    command: -A marketplace worker --loglevel=info
+    volumes:
+      - ./marketplace:/marketplace
+    links:
+      - redis
+    depends_on:
+      - redis
+      - database
+    env_file:
+      - .env
+
+  database:
+    container_name: database
+    image: postgres:17-alpine
     env_file:
       - .env
     ports:
       - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:latest

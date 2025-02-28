@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from .config import DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT, EMAIL_USER, EMAIL_PASSWORD, EM_PORT, EM_HOST, REDIS_URL
+from .config import (DB_HOST, DB_NAME, DB_USER, DB_PASS,
+                     EMAIL_USER, EMAIL_PASSWORD, EM_PORT,
+                     EM_HOST, REDIS_URL, DJANGO_SECRET_KEY)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x_7n8*znje2r@le-dx$t5715r!j*1u%c*w-&)%hnh09__e#*s6'
+SECRET_KEY = DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,7 +88,6 @@ DATABASES = {
         'NAME': DB_NAME,
         'USER': DB_USER,
         'PASSWORD': DB_PASS,
-        'PORT': DB_PORT,
     }
 }
 

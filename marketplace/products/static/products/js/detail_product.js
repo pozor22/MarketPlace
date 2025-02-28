@@ -32,31 +32,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Остальной JavaScript-код (для лайков, редактирования комментариев и т.д.)
-document.getElementById("like-btn").addEventListener("click", function() {
-    fetch("", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "like=1"
-    })
-    .then(response => response.json())
-    .then(data => {
-        let btn = document.getElementById("like-btn");
-        let text = document.getElementById("like-text");
-        let count = document.getElementById("likes-count");
-
-        if (data.liked) {
-            text.innerHTML = "💖 Лайкнуто";
-        } else {
-            text.innerHTML = "🤍 Лайк";
-        }
-        count.innerHTML = data.likes_count;
-    });
-});
-
 document.getElementById("edit-comment-btn").addEventListener("click", function() {
     document.querySelector('.comment-form-container').style.display = 'none';
     document.getElementById('edit-comment-form-container').style.display = 'block';
